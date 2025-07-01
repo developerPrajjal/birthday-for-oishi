@@ -1,0 +1,547 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Dancing Script', cursive;
+  background: linear-gradient(to bottom right, #ffe6f0, #f8ccff);
+  overflow-x: hidden;
+}
+
+.intro {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.intro h1 {
+  font-size: 3rem;
+  color: #ff69b4;
+}
+
+.intro p {
+  font-size: 1.2rem;
+  margin: 15px 0;
+  color: #555;
+}
+
+.heart-bounce {
+  font-size: 40px;
+  animation: bounce 1s infinite;
+  cursor: pointer;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.hidden {
+  display: none;
+}
+
+.container {
+  padding: 30px;
+  text-align: center;
+  background: white;
+  margin: 50px auto;
+  max-width: 700px;
+  border-radius: 20px;
+  box-shadow: 0 0 30px rgba(255, 182, 193, 0.4);
+  animation: fadeIn 1s ease-in-out;
+}
+
+.heading {
+  font-size: 2.5rem;
+  color: #ff69b4;
+  margin-bottom: 20px;
+}
+
+.message {
+  font-size: 1.3rem;
+  color: #444;
+  line-height: 1.6;
+}
+
+.surprise-btn {
+  margin-top: 30px;
+  padding: 10px 20px;
+  font-size: 1.2rem;
+  background-color: #ff69b4;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.surprise-btn:hover {
+  background-color: #ff1493;
+}
+
+.letter-section {
+  margin-top: 40px;
+}
+
+.envelope {
+  width: 100px;
+  cursor: pointer;
+  animation: float 3s ease-in-out infinite;
+  margin-top: 10px;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.letters {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.card {
+  background-color: #fff5fb;
+  border: 2px dashed #ff69b4;
+  border-radius: 12px;
+  padding: 15px 20px;
+  font-size: 1.1rem;
+  color: #444;
+  box-shadow: 0 4px 12px rgba(255, 105, 180, 0.2);
+  animation: fadeInCard 1s ease-in-out forwards;
+  opacity: 0;
+}
+
+.card:nth-child(1) { animation-delay: 0.2s; }
+.card:nth-child(2) { animation-delay: 0.4s; }
+.card:nth-child(3) { animation-delay: 0.6s; }
+
+@keyframes fadeInCard {
+  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(10px); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.duckling-dance {
+  margin-top: 30px;
+  text-align: center;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.dance-title {
+  font-size: 1.5rem;
+  color: #ff69b4;
+  margin-bottom: 10px;
+}
+
+.ducks-row {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.dancing-duck {
+  font-size: 2rem;
+  animation: wiggle 0.4s ease-in-out infinite alternate;
+}
+
+@keyframes wiggle {
+  from { transform: rotate(-15deg); }
+  to { transform: rotate(15deg); }
+}
+
+@keyframes floatUp {
+  to {
+    transform: translateY(-120vh);
+    opacity: 0;
+  }
+}
+.duck-parade {
+  margin-top: 40px;
+  padding: 20px;
+  background-color: #fff0f6;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(255, 192, 203, 0.3);
+  animation: fadeIn 1s ease-in-out;
+}
+
+.duck-text {
+  font-size: 1.3rem;
+  color: #d63384;
+  font-weight: bold;
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
+
+.animated-ducks {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.bounce-duck {
+  animation: bounceDuck 0.6s ease-in-out infinite alternate;
+}
+
+.wiggle-duck {
+  animation: wiggleDuck 0.4s ease-in-out infinite alternate;
+}
+
+.spin-duck {
+  animation: spinDuck 1.2s linear infinite;
+}
+
+@keyframes bounceDuck {
+  from { transform: translateY(0); }
+  to { transform: translateY(-12px); }
+}
+
+@keyframes wiggleDuck {
+  from { transform: rotate(-10deg); }
+  to { transform: rotate(10deg); }
+}
+
+@keyframes spinDuck {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+@keyframes floatUp {
+  0% {
+    transform: translateY(0);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-120vh);
+    opacity: 0;
+  }
+}
+
+.reveal-section {
+  margin-top: 50px;
+  text-align: center;
+}
+
+.reveal-banner {
+  font-size: 1.7rem;
+  color: #d63384;
+  margin-bottom: 15px;
+}
+
+.tap-heart {
+  font-size: 40px;
+  cursor: pointer;
+  animation: pulse 1.2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.revealed-image {
+  margin-top: 20px;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.revealed-image img {
+  max-width: 100%;
+  width: 250px;
+  border-radius: 20px;
+  box-shadow: 0 0 20px rgba(255, 105, 180, 0.5);
+}
+.gift-bounce {
+  font-size: 60px;
+  animation: bounceGift 1s infinite;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+@keyframes bounceGift {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+.compliment-section {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.compliment-cards {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+}
+
+.compliment-card {
+  background-color: #fffaf5;
+  border-left: 5px solid #ff69b4;
+  padding: 12px 20px;
+  border-radius: 10px;
+  max-width: 400px;
+  font-size: 1.1rem;
+  color: #555;
+  animation: fadeInCard 0.5s ease-in-out;
+}
+.surprise-extra {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.extra-cards {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+.surprise-btn {
+  margin-top: 15px;
+  padding: 10px 20px;
+  font-size: 1.2rem;
+  background-color: #ff69b4;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
+  transition: background-color 0.3s ease;
+}
+
+.surprise-btn:hover {
+  background-color: #ff1493;
+}
+.balloon-btn {
+  font-size: 1.2rem;
+  padding: 12px 25px;
+  background-color: #ff69b4;
+  border: none;
+  border-radius: 50px;
+  color: white;
+  cursor: pointer;
+  animation: float 2s ease-in-out infinite;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 0 20px rgba(255, 105, 180, 0.4);
+}
+
+.balloon-btn:hover {
+  background-color: #ff1493;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.themed-surprise-btn {
+  display: inline-block;
+  background-color: #ffe0f0;
+  color: #d63384;
+  font-size: 1.2rem;
+  padding: 12px 25px;
+  border-radius: 25px;
+  box-shadow: 0 0 15px rgba(255, 105, 180, 0.3);
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.themed-surprise-btn:hover {
+  background-color: #ffb6d9;
+  color: white;
+  transform: scale(1.05);
+}
+
+.surprise-hint {
+  font-size: 1rem;
+  margin-bottom: 10px;
+  color: #888;
+  font-style: italic;
+}
+/* Compliment Cards Section */
+.extra-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  margin-top: 2rem;
+  align-items: center;
+}
+
+.extra-cards .card {
+  background: linear-gradient(135deg, #ffe8f0, #fff9f5);
+  border: 2px dashed #ffb6c1;
+  border-radius: 25px;
+  padding: 1.2rem 2rem;
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.4rem;
+  color: #d6336c;
+  max-width: 80%;
+  box-shadow: 0 4px 10px rgba(255, 182, 193, 0.3);
+  text-align: center;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInSlideUp 1s ease-out forwards;
+}
+
+/* Animation Stagger (optional but nice!) */
+.extra-cards .card:nth-child(2) {
+  animation-delay: 0.3s;
+}
+.extra-cards .card:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+@keyframes fadeInSlideUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.compliment-carousel {
+  max-width: 90%;
+  margin: 2rem auto;
+  overflow: hidden;
+  position: relative;
+}
+
+.card-slider {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+  width: 300%;
+}
+
+.card-slider .card {
+  min-width: 100%;
+  box-sizing: border-box;
+  background: linear-gradient(135deg, #ffe8f0, #fff9f5);
+  border: 2px dashed #ffb6c1;
+  border-radius: 25px;
+  padding: 1.5rem;
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.4rem;
+  color: #d6336c;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(255, 182, 193, 0.3);
+}
+
+/* Navigation Buttons (optional styling) */
+.carousel-controls {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.carousel-controls button {
+  background-color: #ffb6c1;
+  border: none;
+  border-radius: 10px;
+  padding: 0.5rem 1rem;
+  margin: 0 0.5rem;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.carousel-controls button:hover {
+  background-color: #ff6f91;
+}
+/* Optional: Enhance trail effect */
+body div.emoji-trail {
+  filter: drop-shadow(0 0 2px #ff99cc);
+}
+.emoji-trail {
+  position: fixed;
+  transform: translate(-50%, -50%) scale(0.8);
+  font-size: 14px; /* smaller size */
+  opacity: 0.6; /* subtle glow */
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  pointer-events: none;
+  z-index: 9999;
+  filter: drop-shadow(0 0 1px rgba(255, 192, 203, 0.4));
+}
+.emoji-trail {
+  position: fixed;
+  transform: translate(-50%, -50%) scale(0.6);
+  font-size: 12px;
+  opacity: 0.5;
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  pointer-events: none;
+  z-index: 9999;
+  filter: drop-shadow(0 0 1px rgba(255, 192, 203, 0.3));
+}
+/* -------------------------------
+   📱 Mobile Optimization Styles
+--------------------------------- */
+@media (max-width: 768px) {
+  body {
+    font-size: 15px;
+    padding: 10px;
+  }
+
+  h1, h2, h3 {
+    font-size: 1.4em;
+    text-align: center;
+  }
+
+  .container {
+    padding: 1em;
+  }
+
+  .tap-heart,
+  .heart-bounce,
+  #revealImageBtn {
+    font-size: 2.5rem;
+    margin: 10px auto;
+  }
+
+  .revealed-image img {
+    width: 90%;
+    height: auto;
+  }
+
+  .card {
+    font-size: 0.95rem;
+    padding: 0.75em;
+    margin: 0.5em auto;
+    line-height: 1.4;
+    max-width: 90%;
+  }
+
+  .ducks,
+  .ducks-row {
+    gap: 0.5em;
+    font-size: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .emoji {
+    font-size: 18px !important;
+    opacity: 0.6 !important;
+  }
+
+  .balloon-btn,
+  .reveal-banner {
+    font-size: 1rem;
+    padding: 0.5em 1em;
+  }
+
+  .letters .card,
+  #extraCards .card {
+    margin: 0.5em;
+  }
+
+  .envelope {
+    width: 100px;
+    height: auto;
+  }
+
+  .floating-emoji {
+    font-size: 1.2rem !important;
+  }
+}
