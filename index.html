@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Happy Birthday Oishi 🎂</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+  <!-- Intro Page -->
+  <div class="intro">
+    <h1>Happy Birthday Oishi 🎉</h1>
+    <p>Tap the heart to begin 💖</p>
+    <div class="heart-bounce" id="revealBtn">💖</div>
+  </div>
+
+  <!-- Main Message Page -->
+  <div class="main hidden" id="mainMessage">
+    <div class="container">
+      <h2 class="heading">To the sweetest soul...</h2>
+      <p class="message">
+        On this day, the world became brighter—because YOU were born.<br />
+        Your smile, your kindness, your warmth—they light up hearts.<br />
+        I may just be a quiet admirer, but I truly hope your day is as special as you are. 🌸
+      </p>
+
+      <!-- Duck Parade -->
+      <div class="duck-parade">
+        <p class="duck-text">
+          🐥💃 A parade of birthday ducklings just for Oishi ! 💃🐥<br />
+          They're dancing their hearts out to wish you joy and smiles! 🎉
+        </p>
+        <div class="ducks animated-ducks">
+          <span class="duck bounce-duck">🐤</span>
+          <span class="duck wiggle-duck">🐥</span>
+          <span class="duck spin-duck">🐣</span>
+          <span class="duck wiggle-duck">🐥</span>
+          <span class="duck bounce-duck">🐤</span>
+        </div>
+      </div>
+
+      <!-- Tap to Reveal Image -->
+      <div class="reveal-section">
+        <h3 class="reveal-banner">🎀 Tap to Reveal 🎀</h3>
+        <div class="tap-heart" id="revealImageBtn">🎂</div>
+
+        <div class="revealed-image hidden" id="revealedImage">
+          <img src="assets/Oishi.jpg" alt="Birthday Girl" />
+        </div>
+      </div>
+
+      <!-- Compliment Surprise (No Button) -->
+      <div class="surprise-extra hidden" id="surpriseSection">
+        <div class="extra-cards" id="extraCards">
+          <div class="card">💫 You radiate light like a star even on cloudy days.</div>
+          <div class="card">🌈 The world feels gentler just by your presence.</div>
+          <div class="card">🎶 Your laugh could cure the saddest day.</div>
+        </div>
+      </div>
+
+      <!-- Letter Section -->
+      <div class="letter-section">
+        <h3>Got Some Birthday Letters ✉️ for YOU</h3>
+        <img src="assets/envelope.png" class="envelope" id="openEnvelope" alt="Envelope"/>
+        
+        <div class="letters hidden" id="letters">
+          <div class="card">🌸 You bring calmness in a world full of noise. Happy Birthday!</div>
+          <div class="card">🌟 May every wish you whisper today become your reality tomorrow.</div>
+          <div class="card">📖 Once upon a time, a girl named Oishi was born — and the world got a little brighter. 🌼</div>
+        </div>
+
+        <!-- Duckling Dance -->
+        <div class="duckling-dance hidden" id="ducklingDance">
+          <p class="dance-title">🐥 Happy Birthday! 🐥</p>
+          <div class="ducks-row">
+            <span class="dancing-duck">🐤</span>
+            <span class="dancing-duck">🐥</span>
+            <span class="dancing-duck">🐣</span>
+            <span class="dancing-duck">🐥</span>
+            <span class="dancing-duck">🐤</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Background Music -->
+  <audio autoplay loop>
+    <source src="assets/birthday.mp3" type="audio/mpeg" />
+  </audio>
+
+  <!-- Floating Cake Emojis -->
+  <div class="cake-container" id="cakeContainer"></div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
