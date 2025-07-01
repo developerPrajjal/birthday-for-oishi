@@ -1,8 +1,18 @@
-// Reveal Main Message with Confetti on Heart Tap
+// Reveal Main Message with Confetti and Start Music
 document.getElementById("revealBtn").addEventListener("click", () => {
+  // Hide intro, show main message
   document.querySelector(".intro").classList.add("hidden");
   document.getElementById("mainMessage").classList.remove("hidden");
 
+  // 🎶 Start background music on interaction
+  const bgMusic = document.getElementById("bgMusic");
+  if (bgMusic && bgMusic.paused) {
+    bgMusic.play().catch((e) => {
+      console.warn("Autoplay blocked:", e);
+    });
+  }
+
+  // 🎉 Confetti burst
   confetti({ particleCount: 120, spread: 100, origin: { y: 0.6 } });
 });
 
@@ -14,7 +24,7 @@ document.getElementById("revealImageBtn").addEventListener("click", () => {
   if (revealedImg.classList.contains("hidden")) {
     revealedImg.classList.remove("hidden");
 
-    // Show compliment cards directly after image
+    // Show compliment cards shortly after image is revealed
     setTimeout(() => {
       surpriseSection.classList.remove("hidden");
     }, 500);
@@ -27,7 +37,7 @@ document.getElementById("openEnvelope").addEventListener("click", () => {
   document.getElementById("ducklingDance").classList.remove("hidden");
 });
 
-// Floating Cake Emojis
+// Floating Cake Emojis (slow upward effect)
 const floatingEmojis = ['🎂', '💝', '🎉', '💖', '🐥'];
 setInterval(() => {
   const emoji = document.createElement('div');
@@ -35,15 +45,22 @@ setInterval(() => {
   emoji.style.position = 'fixed';
   emoji.style.left = Math.random() * 100 + 'vw';
   emoji.style.top = '100vh';
-  emoji.style.fontSize = (Math.random() * 24 + 20) + 'px';
-  emoji.style.opacity = 0.8;
+  emoji.style.fontSize = (Math.random() * 18 + 14) + 'px';
+  emoji.style.opacity = 0.6;
   emoji.style.zIndex = '9999';
   emoji.style.pointerEvents = 'none';
-  emoji.style.animation = 'floatUp 6s linear forwards';
+  emoji.style.transition = 'transform 6s linear, opacity 6s ease-out';
   document.body.appendChild(emoji);
+
+  requestAnimationFrame(() => {
+    emoji.style.transform = 'translateY(-120vh)';
+    emoji.style.opacity = '0';
+  });
+
   setTimeout(() => emoji.remove(), 6000);
-}, 300);
-// Smooth, responsive emoji trail
+}, 400);
+
+// Trail Emoji Logic on Cursor/Touch Move
 const trailEmojis = ['💗', '🎂', '🎉', '🎈', '💖'];
 
 function createTrailEmoji(x, y) {
@@ -63,7 +80,6 @@ function createTrailEmoji(x, y) {
   setTimeout(() => emoji.remove(), 800);
 }
 
-// Smoother, responsive tracking (detects even small movement)
 let lastX = null;
 let lastY = null;
 
@@ -78,7 +94,7 @@ function shouldSpawn(x, y) {
   const dy = y - lastY;
   const distance = Math.sqrt(dx * dx + dy * dy);
 
-  if (distance > 1) { // ~1px movement
+  if (distance > 2) {
     lastX = x;
     lastY = y;
     return true;
