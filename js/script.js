@@ -170,3 +170,4 @@ document.getElementById("gameSuccess").scrollIntoView({ behavior: "smooth" });
     }
   }, 800);
 });
+
