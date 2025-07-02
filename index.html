@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="css/style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  
 </head>
 <body>
   <!-- Intro Page -->
@@ -86,11 +87,34 @@
     </div>
   </div>
 
+  <!-- 🎮 Game Launch Button -->
+<div id="gameLauncher">🎮</div>
+
+<!-- 🐥 Duckling Catch Game Modal -->
+<div id="duckGameModal" class="hidden">
+  <div class="game-box">
+    <h2>🐥 Catch the Ducklings!</h2>
+    <p>Click/tap on the ducklings as they appear!</p>
+    <div id="gameArea"></div>
+    <p>Score: <span id="scoreCounter">0</span></p>
+    <button id="startGameBtn">Start</button>
+    <button id="closeGameBtn">Close</button>
+  </div>
+</div>
+
+<div id="gameSuccess" class="hidden">
+  <div class="success-box">
+    <div class="tenor-gif-embed" data-postid="25065443" data-share-method="host" data-aspect-ratio="1.23552" data-width="100%"><a href="https://tenor.com/view/duck-gif-25065443">Duck Sticker</a>from <a href="https://tenor.com/search/duck-stickers">Duck Stickers</a></div> <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
+    <h2>🎉 You're a Duckling Queen! 🎉</h2>
+    <p>You spread birthday joy like no one else. 💖🐥</p>
+  </div>
+</div>
+
+
   <!-- Background Music -->
- <audio id="bgMusic" loop>
+  <audio id="bgMusic" preload="auto" loop>
   <source src="assets/birthday.mp3" type="audio/mpeg" />
 </audio>
-
 
 
 
@@ -100,3 +124,4 @@
   <script src="js/script.js"></script>
 </body>
 </html>
+
