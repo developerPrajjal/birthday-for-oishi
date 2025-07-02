@@ -114,3 +114,59 @@ function handleMove(e) {
 
 window.addEventListener("mousemove", handleMove);
 window.addEventListener("touchmove", handleMove);
+const gameLauncher = document.getElementById("gameLauncher");
+const duckGameModal = document.getElementById("duckGameModal");
+const startGameBtn = document.getElementById("startGameBtn");
+const closeGameBtn = document.getElementById("closeGameBtn");
+const gameArea = document.getElementById("gameArea");
+const scoreCounter = document.getElementById("scoreCounter");
+
+let score = 0;
+let gameInterval = null;
+
+gameLauncher.addEventListener("click", () => {
+  duckGameModal.classList.remove("hidden");
+});
+
+closeGameBtn.addEventListener("click", () => {
+  duckGameModal.classList.add("hidden");
+  clearInterval(gameInterval);
+  gameArea.innerHTML = "";
+  score = 0;
+  scoreCounter.textContent = score;
+});
+
+startGameBtn.addEventListener("click", () => {
+  score = 0;
+  scoreCounter.textContent = score;
+  gameArea.innerHTML = "";
+
+  gameInterval = setInterval(() => {
+    const duck = document.createElement("div");
+    duck.className = "duckling";
+    duck.textContent = "🐥";
+    duck.style.left = Math.random() * 200 + "px";
+    duck.style.top = Math.random() * 200 + "px";
+
+    duck.addEventListener("click", () => {
+      score++;
+      scoreCounter.textContent = score;
+      duck.remove();
+    });
+
+    gameArea.appendChild(duck);
+
+    setTimeout(() => {
+      duck.remove();
+    }, 1000);
+
+    if (score >= 10) {
+      clearInterval(gameInterval);
+      document.getElementById("gameSuccess").classList.remove("hidden");
+confetti({ particleCount: 100, spread: 80, origin: { y: 0.6 } });
+document.getElementById("gameSuccess").scrollIntoView({ behavior: "smooth" });
+      duckGameModal.classList.add("hidden");
+      gameArea.innerHTML = "";
+    }
+  }, 800);
+});
