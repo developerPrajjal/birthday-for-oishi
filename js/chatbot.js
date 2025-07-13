@@ -10,17 +10,19 @@ const chatbotBody = document.getElementById("chatbotBody");
 let step = 0;
 let selectedGenres = [];
 
+// Open chatbot
 chatbotLauncher.addEventListener("click", () => {
   melodyChatbot.classList.remove("hidden");
   chatbotCloud.classList.add("hidden");
 });
 
+// Close chatbot
 closeChatbot.addEventListener("click", () => {
   melodyChatbot.classList.add("hidden");
   chatbotCloud.classList.remove("hidden");
 });
 
-// Handle sending message
+// Message sending handlers
 sendMsg.addEventListener("click", handleUserMessage);
 userInput.addEventListener("keypress", function (e) {
   if (e.key === "Enter") {
@@ -63,16 +65,17 @@ function handleBotResponse(userMsg) {
 }
 
 function generateSpotifyAuthLink(genres) {
-  const clientId = "9d4c5c3068574999b5ce2dea3bf5db54"; // 🔁 Replace this with your actual Client ID
+  const clientId = "9d4c5c3068574999b5ce2dea3bf5db54"; // ✅ Already correct
   const redirectUri = "https://developerprajjal.github.io/birthday-for-oishi/callback.html";
   const scope = "playlist-modify-public";
   const state = encodeURIComponent(genres.join(","));
+  
   const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&redirect_uri=${encodeURIComponent(
     redirectUri
   )}&scope=${encodeURIComponent(scope)}&state=${state}`;
 
-  appendMessage("bot", "Click the button below to open Spotify and generate your playlist!");
-  
+  appendMessage("bot", "Click below to open Spotify and generate your custom playlist!");
+
   const button = document.createElement("button");
   button.textContent = "🎵 Open Spotify";
   button.className = "spotify-btn";
