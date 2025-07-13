@@ -170,4 +170,37 @@ document.getElementById("gameSuccess").scrollIntoView({ behavior: "smooth" });
     }
   }, 800);
 });
+document.getElementById("chatbotLauncher").addEventListener("click", () => {
+  // You can expand this to show chatbot UI later
+  alert("MelodyAI coming soon! 🚀");
+});
+const botButton = document.getElementById("melodyBotBtn");
+const chatbotBox = document.getElementById("melodyChatbot");
+const closeBtn = document.getElementById("closeChatbot");
+const sendBtn = document.getElementById("sendMsg");
+const userInput = document.getElementById("userInput");
+const chatbotBody = document.getElementById("chatbotBody");
 
+// Toggle chatbot on button click
+botButton.addEventListener("click", () => {
+  chatbotBox.classList.toggle("hidden");
+});
+
+// Close button
+closeBtn.addEventListener("click", () => {
+  chatbotBox.classList.add("hidden");
+});
+
+// Add user's message
+sendBtn.addEventListener("click", () => {
+  const msg = userInput.value.trim();
+  if (msg) {
+    const userMsg = document.createElement("div");
+    userMsg.className = "bot-message";
+    userMsg.style.background = "#d4eaff";
+    userMsg.textContent = msg;
+    chatbotBody.appendChild(userMsg);
+    userInput.value = "";
+    chatbotBody.scrollTop = chatbotBody.scrollHeight;
+  }
+});
