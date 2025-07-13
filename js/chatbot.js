@@ -1,85 +1,86 @@
-// js/chatbot.js
+// Elements
+const chatbotLauncher = document.getElementById("chatbotLauncher");
+const melodyChatbot = document.getElementById("melodyChatbot");
+const chatbotCloud = document.getElementById("chatbotCloud");
+const closeChatbot = document.getElementById("closeChatbot");
+const sendMsg = document.getElementById("sendMsg");
+const userInput = document.getElementById("userInput");
+const chatbotBody = document.getElementById("chatbotBody");
 
-document.addEventListener("DOMContentLoaded", function () {
-  const chatbotLauncher = document.getElementById("chatbotLauncher");
-  const chatbot = document.getElementById("melodyChatbot");
-  const closeBtn = document.getElementById("closeChatbot");
-  const chatbotCloud = document.getElementById("chatbotCloud");
-  const sendBtn = document.getElementById("sendMsg");
-  const userInput = document.getElementById("userInput");
-  const chatbotBody = document.getElementById("chatbotBody");
+let step = 0;
+let selectedGenres = [];
 
-  // Toggle Chatbot On Click
-  chatbotLauncher.addEventListener("click", function () {
-    chatbot.classList.remove("hidden");
-    chatbotCloud.style.display = "none"; // Hide cloud message
-  });
-
-  // Close Chatbot
-  closeBtn.addEventListener("click", function () {
-    chatbot.classList.add("hidden");
-    chatbotCloud.style.display = "block"; // Show cloud message again
-  });
-
-  // Handle Send Button Click
-  sendBtn.addEventListener("click", function () {
-    const msg = userInput.value.trim();
-    if (msg !== "") {
-      // Show user message
-      const userMsgElem = document.createElement("div");
-      userMsgElem.className = "user-message";
-      userMsgElem.textContent = msg;
-      chatbotBody.appendChild(userMsgElem);
-
-      // Scroll to bottom
-      chatbotBody.scrollTop = chatbotBody.scrollHeight;
-
-      userInput.value = "";
-
-      // Dummy bot response
-      setTimeout(() => {
-        const botMsgElem = document.createElement("div");
-        botMsgElem.className = "bot-message";
-        botMsgElem.textContent = "That's lovely! 😊";
-        chatbotBody.appendChild(botMsgElem);
-
-        const spotifyBtn = document.createElement("button");
-spotifyBtn.textContent = "🎵 Connect to Spotify";
-spotifyBtn.classList.add("spotify-connect-btn");
-spotifyBtn.onclick = redirectToSpotifyAuth;
-chatbotBody.appendChild(spotifyBtn);
-
-
-        // Scroll again
-        chatbotBody.scrollTop = chatbotBody.scrollHeight;
-      }, 700);
-    }
-  });
-
-  // Allow Enter Key to Send
-  userInput.addEventListener("keypress", function (e) {
-    if (e.key === "Enter") {
-      sendBtn.click();
-    }
-  });
+chatbotLauncher.addEventListener("click", () => {
+  melodyChatbot.classList.remove("hidden");
+  chatbotCloud.classList.add("hidden");
 });
 
-// Spotify OAuth Setup
-function redirectToSpotifyAuth() {
-  const clientId = "9d4c5c3068574999b5ce2dea3bf5db54";
-  const redirectUri = "https://developerprajjal.github.io/birthday-for-oishi/";
-  const scopes = "playlist-modify-private playlist-modify-public";
+closeChatbot.addEventListener("click", () => {
+  melodyChatbot.classList.add("hidden");
+  chatbotCloud.classList.remove("hidden");
+});
 
-  const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scopes)}`;
+// Handle sending message
+sendMsg.addEventListener("click", handleUserMessage);
+userInput.addEventListener("keypress", function (e) {
+  if (e.key === "Enter") {
+    handleUserMessage();
+  }
+});
 
-  window.location.href = authUrl;
+function handleUserMessage() {
+  const message = userInput.value.trim();
+  if (!message) return;
+
+  appendMessage("user", message);
+  userInput.value = "";
+
+  setTimeout(() => {
+    handleBotResponse(message);
+  }, 600);
 }
-function redirectToSpotifyAuth() {
-  const clientId = "9d4c5c3068574999b5ce2dea3bf5db54"; // Replace with your actual Spotify client ID
+
+function appendMessage(sender, text) {
+  const msgDiv = document.createElement("div");
+  msgDiv.classList.add(sender === "bot" ? "bot-message" : "user-message");
+  msgDiv.textContent = text;
+  chatbotBody.appendChild(msgDiv);
+  chatbotBody.scrollTop = chatbotBody.scrollHeight;
+}
+
+function handleBotResponse(userMsg) {
+  if (step === 0) {
+    appendMessage("bot", "Awesome! 🎧 What genre(s) of music do you love? You can mention more than one.");
+    step = 1;
+  } else if (step === 1) {
+    selectedGenres = userMsg.split(",").map((genre) => genre.trim());
+    appendMessage("bot", `Great taste! Creating a custom playlist for: ${selectedGenres.join(", ")}`);
+    generateSpotifyAuthLink(selectedGenres);
+    step = 2;
+  } else {
+    appendMessage("bot", "Hang tight while I get your playlist ready! 🎵");
+  }
+}
+
+function generateSpotifyAuthLink(genres) {
+  const clientId = "YOUR_SPOTIFY_CLIENT_ID"; // 🔁 Replace this with your actual Client ID
   const redirectUri = "https://developerprajjal.github.io/birthday-for-oishi/callback.html";
-  const scopes = "playlist-modify-public";
+  const scope = "playlist-modify-public";
+  const state = encodeURIComponent(genres.join(","));
+  const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&redirect_uri=${encodeURIComponent(
+    redirectUri
+  )}&scope=${encodeURIComponent(scope)}&state=${state}`;
 
-  const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scopes)}`;
+  appendMessage("bot", "Click the button below to open Spotify and generate your playlist!");
+  
+  const button = document.createElement("button");
+  button.textContent = "🎵 Open Spotify";
+  button.className = "spotify-btn";
+  button.onclick = () => window.open(authUrl, "_blank");
 
-  window.location.href = authUrl;
+  const wrapper = document.createElement("div");
+  wrapper.className = "bot-message";
+  wrapper.appendChild(button);
+  chatbotBody.appendChild(wrapper);
+  chatbotBody.scrollTop = chatbotBody.scrollHeight;
 }
