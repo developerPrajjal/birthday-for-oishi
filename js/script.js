@@ -170,10 +170,7 @@ document.getElementById("gameSuccess").scrollIntoView({ behavior: "smooth" });
     }
   }, 800);
 });
-document.getElementById("chatbotLauncher").addEventListener("click", () => {
-  // You can expand this to show chatbot UI later
-  alert("MelodyAI coming soon! 🚀");
-});
+
 const botButton = document.getElementById("melodyBotBtn");
 const chatbotBox = document.getElementById("melodyChatbot");
 const closeBtn = document.getElementById("closeChatbot");
