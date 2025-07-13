@@ -63,7 +63,7 @@ function handleBotResponse(userMsg) {
 }
 
 function generateSpotifyAuthLink(genres) {
-  const clientId = "YOUR_SPOTIFY_CLIENT_ID"; // 🔁 Replace this with your actual Client ID
+  const clientId = "9d4c5c3068574999b5ce2dea3bf5db54"; // 🔁 Replace this with your actual Client ID
   const redirectUri = "https://developerprajjal.github.io/birthday-for-oishi/callback.html";
   const scope = "playlist-modify-public";
   const state = encodeURIComponent(genres.join(","));
