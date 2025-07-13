@@ -6,6 +6,7 @@
   <title>Happy Birthday Oishi 🎂</title>
   <link rel="stylesheet" href="css/style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
@@ -125,5 +126,39 @@
 
   <!-- Script -->
   <script src="js/script.js"></script>
+
+  <!-- Replace your current <body> section (starting from chatbotLauncher) with this fixed version -->
+
+<!-- 🎵 Chatbot Launcher Button (Only one now) -->
+<div id="chatbotLauncher">
+  <img src="assets/bot.jpg" alt="MelodyBot" />
+</div>
+
+<!-- Chatbot Cloud Message -->
+<div id="chatbotCloud" class="chatbot-cloud">
+  Hey, I’m MelodyAI. Click to reveal surprise!
+</div>
+
+<!-- MelodyAI Chatbot Box -->
+<div id="melodyChatbot" class="hidden">
+  <div class="chatbot-header">
+    <span>🎀 MelodyAI</span>
+    <button id="closeChatbot">✖</button>
+  </div>
+  <div class="chatbot-body" id="chatbotBody">
+    <div class="bot-message">Hello Oishi, hope you are having a great day! 😀</div>
+  </div>
+  <div class="chatbot-input">
+    <input type="text" id="userInput" placeholder="Type your message..." />
+    <button id="sendMsg">Send</button>
+  </div>
+</div>
+
+<!-- JS Links -->
+<script src="js/script.js"></script>
+<script src="js/chatbot.js"></script>
+
+
+
 </body>
 </html>
