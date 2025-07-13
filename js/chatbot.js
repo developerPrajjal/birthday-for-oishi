@@ -74,3 +74,12 @@ function redirectToSpotifyAuth() {
 
   window.location.href = authUrl;
 }
+function redirectToSpotifyAuth() {
+  const clientId = "9d4c5c3068574999b5ce2dea3bf5db54"; // Replace with your actual Spotify client ID
+  const redirectUri = "https://developerprajjal.github.io/birthday-for-oishi/callback.html";
+  const scopes = "playlist-modify-public";
+
+  const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scopes)}`;
+
+  window.location.href = authUrl;
+}
