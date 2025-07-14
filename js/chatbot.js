@@ -68,7 +68,8 @@ function appendSpotifyButton(url) {
   const button = document.createElement("button");
   button.textContent = "🎵 Open Spotify";
   button.className = "spotify-btn";
-  button.onclick = () => window.open(url, "_blank");
+  button.onclick = () => window.location.href = authUrl;
+
 
   const wrapper = document.createElement("div");
   wrapper.className = "bot-message";
