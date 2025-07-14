@@ -1,6 +1,5 @@
-// Wrap everything inside DOMContentLoaded
 document.addEventListener("DOMContentLoaded", () => {
-  // Elements
+  // Check if all required elements exist
   const chatbotLauncher = document.getElementById("chatbotLauncher");
   const melodyChatbot = document.getElementById("melodyChatbot");
   const chatbotCloud = document.getElementById("chatbotCloud");
@@ -9,25 +8,29 @@ document.addEventListener("DOMContentLoaded", () => {
   const userInput = document.getElementById("userInput");
   const chatbotBody = document.getElementById("chatbotBody");
 
+  if (!chatbotLauncher || !melodyChatbot || !chatbotCloud) {
+    console.error("❌ Required chatbot elements not found in DOM");
+    return;
+  }
+
+  // Debug confirmation
+  console.log("✅ MelodyBot: Elements loaded and script running");
+
   let step = 0;
   let selectedGenres = [];
 
-  // Log for debugging
-  console.log("Chatbot JS Loaded");
-
-  chatbotLauncher?.addEventListener("click", () => {
-    console.log("Bot icon clicked"); // Debug
+  chatbotLauncher.addEventListener("click", () => {
     melodyChatbot.classList.remove("hidden");
     chatbotCloud.classList.add("hidden");
   });
 
-  closeChatbot?.addEventListener("click", () => {
+  closeChatbot.addEventListener("click", () => {
     melodyChatbot.classList.add("hidden");
     chatbotCloud.classList.remove("hidden");
   });
 
-  sendMsg?.addEventListener("click", handleUserMessage);
-  userInput?.addEventListener("keypress", function (e) {
+  sendMsg.addEventListener("click", handleUserMessage);
+  userInput.addEventListener("keypress", function (e) {
     if (e.key === "Enter") {
       handleUserMessage();
     }
@@ -68,7 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function generateSpotifyAuthLink(genres) {
-    const clientId = "9d4c5c3068574999b5ce2dea3bf5db54"; // Replace with your actual Spotify Client ID
+    const clientId = "9d4c5c3068574999b5ce2dea3bf5db54";
     const redirectUri = "https://developerprajjal.github.io/birthday-for-oishi/callback.html";
     const scope = "playlist-modify-public";
     const state = encodeURIComponent(genres.join(","));
