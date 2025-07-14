@@ -1404,3 +1404,39 @@ body div.emoji-trail {
 .spotify-btn:hover {
   background-color: #e0559e;
 }
+
+/* === Chatbot Input Section Fix === */
+.chatbot-input {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: #fff;
+  border-top: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.chatbot-input input {
+  flex: 1;
+  padding: 10px 12px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  outline: none;
+}
+
+.chatbot-input button {
+  margin-left: 10px;
+  padding: 10px 16px;
+  background-color: #ff8ac9; /* theme pink */
+  border: none;
+  border-radius: 20px;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+
+.chatbot-input button:hover {
+  background-color: #ff6fb1;
+}
+
