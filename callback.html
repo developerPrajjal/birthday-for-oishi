@@ -10,26 +10,26 @@
     async function exchangeToken() {
       const urlParams = new URLSearchParams(window.location.search);
       const code = urlParams.get("code");
-      const state = urlParams.get("state"); // (genres)
+      const state = urlParams.get("state"); // genre info
       const codeVerifier = sessionStorage.getItem("code_verifier");
 
       if (!code || !codeVerifier) {
+        localStorage.removeItem("spotify_token");
+        localStorage.removeItem("selected_genres");
         document.body.innerHTML = "<h2>Spotify login failed. Please try again.</h2>";
         return;
       }
 
       try {
-        const res = await fetch("https://accounts.spotify.com/api/token", {
+        const res = await fetch("https://birthday-oishi-backend.onrender.com/token", {
           method: "POST",
           headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
+            "Content-Type": "application/json"
           },
-          body: new URLSearchParams({
-            grant_type: "authorization_code",
+          body: JSON.stringify({
             code,
-            redirect_uri: "https://developerprajjal.github.io/birthday-for-oishi/callback.html",
-            client_id: "9d4c5c3068574999b5ce2dea3bf5db54",
-            code_verifier: codeVerifier
+            code_verifier: codeVerifier,
+            redirect_uri: "https://developerprajjal.github.io/birthday-for-oishi/callback.html"
           })
         });
 
@@ -39,14 +39,18 @@
           localStorage.setItem("spotify_token", data.access_token);
           localStorage.setItem("selected_genres", decodeURIComponent(state));
 
-          // Redirect back to main page
+          // Go back to chatbot with playlist
           window.location.href = "https://developerprajjal.github.io/birthday-for-oishi/#playlist";
         } else {
+          console.error("Token error:", data);
+          localStorage.removeItem("spotify_token");
+          localStorage.removeItem("selected_genres");
           document.body.innerHTML = "<h2>Spotify login failed. Please try again.</h2>";
-          console.error(data);
         }
       } catch (err) {
         console.error(err);
+        localStorage.removeItem("spotify_token");
+        localStorage.removeItem("selected_genres");
         document.body.innerHTML = "<h2>Something went wrong.</h2>";
       }
     }
