@@ -51,6 +51,7 @@ function handleBotResponse(userMsg) {
     step = 1;
   } else if (step === 1) {
     selectedGenres = userMsg.split(",").map((genre) => genre.trim());
+    localStorage.setItem("selected_genres", selectedGenres.join(", "));
     appendMessage("bot", `Great taste! Creating a custom playlist for: ${selectedGenres.join(", ")}`);
     initiateSpotifyLogin(selectedGenres);
     step = 2;
@@ -63,7 +64,7 @@ function handleBotResponse(userMsg) {
 async function generateCodeChallenge(codeVerifier) {
   const encoder = new TextEncoder();
   const data = encoder.encode(codeVerifier);
-  const digest = await window.crypto.subtle.digest("SHA-256", data);
+  const digest = await crypto.subtle.digest("SHA-256", data);
   return btoa(String.fromCharCode(...new Uint8Array(digest)))
     .replace(/\+/g, "-")
     .replace(/\//g, "_")
@@ -72,7 +73,7 @@ async function generateCodeChallenge(codeVerifier) {
 
 function generateRandomString(length) {
   const array = new Uint8Array(length);
-  window.crypto.getRandomValues(array);
+  crypto.getRandomValues(array);
   return Array.from(array, (byte) => ('0' + (byte & 0xff).toString(16)).slice(-2)).join("");
 }
 
@@ -83,8 +84,8 @@ async function initiateSpotifyLogin(genres) {
   const codeVerifier = generateRandomString(64);
   const codeChallenge = await generateCodeChallenge(codeVerifier);
 
-  // Store code_verifier to exchange later
-  sessionStorage.setItem("code_verifier", codeVerifier);
+  // Store for use in callback
+  localStorage.setItem("code_verifier", codeVerifier);
 
   const authUrl = `https://accounts.spotify.com/authorize?response_type=code&client_id=${clientId}&scope=playlist-modify-public&redirect_uri=${encodeURIComponent(redirectUri)}&state=${state}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
 
@@ -102,14 +103,22 @@ async function initiateSpotifyLogin(genres) {
   chatbotBody.scrollTop = chatbotBody.scrollHeight;
 }
 
-// ⏪ Handle redirect playlist (after callback)
+// Handle redirect state if coming back from Spotify
 window.addEventListener("load", () => {
-  if (window.location.hash.includes("playlist")) {
-    const token = localStorage.getItem("spotify_token");
-    const genres = localStorage.getItem("selected_genres");
-    if (token && genres) {
-      appendMessage("bot", `Here’s your playlist based on: ${genres}`);
-      appendMessage("bot", "🎉 Playlist creation coming soon!");
-    }
+  const urlParams = new URLSearchParams(window.location.search);
+  const code = urlParams.get("code");
+  const state = urlParams.get("state");
+
+  if (code) {
+    appendMessage("bot", "✅ Spotify login successful! Fetching your playlist soon...");
+    localStorage.setItem("spotify_code", code);
+    if (state) localStorage.setItem("selected_genres", decodeURIComponent(state));
+    // Optionally: Trigger a backend call to generate playlist here
+  }
+
+  const storedGenres = localStorage.getItem("selected_genres");
+  if (storedGenres && !code) {
+    appendMessage("bot", `🎵 You previously selected: ${storedGenres}`);
+    appendMessage("bot", "If you've already logged in, your playlist will appear shortly!");
   }
 });
