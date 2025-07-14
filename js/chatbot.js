@@ -140,7 +140,7 @@ async function initiateSpotifyLogin(genres) {
 // 🎵 Playlist Generation from Backend
 async function generatePlaylist(token, genres) {
   try {
-    const res = await fetch("https://your-backend.onrender.com/api/create-playlist", {
+    const res = await fetch("https://melody-backend-7vmo.onrender.com", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
