@@ -15,7 +15,7 @@ chatbotLauncher.addEventListener("click", () => {
   melodyChatbot.classList.remove("hidden");
   chatbotCloud.classList.add("hidden");
 
-  // Only show message once after Spotify login redirect
+  // After Spotify login redirect
   if (window.location.hash.includes("playlist")) {
     const token = localStorage.getItem("spotify_token");
     const genres = localStorage.getItem("selected_genres");
@@ -83,15 +83,26 @@ function handleBotResponse(userMsg) {
     step = 1;
   } else if (step === 1) {
     selectedGenres = userMsg.split(",").map((genre) => genre.trim());
-    appendMessage("bot", `Great taste! Creating a custom playlist for: ${selectedGenres.join(", ")}`);
-    initiateSpotifyLogin(selectedGenres);
+    appendMessage("bot", `Great taste! 💕 I'll now prepare a playlist based on: ${selectedGenres.join(", ")}`);
+
+    const button = document.createElement("button");
+    button.textContent = "Generate My Playlist 🎵";
+    button.className = "spotify-btn";
+    button.onclick = () => initiateSpotifyLogin(selectedGenres);
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "bot-message";
+    wrapper.appendChild(button);
+    chatbotBody.appendChild(wrapper);
+    chatbotBody.scrollTop = chatbotBody.scrollHeight;
+
     step = 2;
   } else {
     appendMessage("bot", "Hang tight while I get your playlist ready! 🎵");
   }
 }
 
-// 🎵 Spotify Login Flow with PKCE
+// 🔐 Spotify Login Flow with PKCE
 async function generateCodeChallenge(codeVerifier) {
   const encoder = new TextEncoder();
   const data = encoder.encode(codeVerifier);
