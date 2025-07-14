@@ -7,49 +7,50 @@
 <body>
   <h2>Redirecting... Please wait.</h2>
   <script>
-    async function exchangeToken() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const code = urlParams.get("code");
-      const state = urlParams.get("state"); // genre info
-      const codeVerifier = sessionStorage.getItem("code_verifier");
+  async function exchangeToken() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get("code");
+    const state = urlParams.get("state"); // genres
+    const codeVerifier = sessionStorage.getItem("code_verifier");
 
-      if (!code || !codeVerifier) {
-        document.body.innerHTML = "<h2>Spotify login failed. Please try again.</h2>";
-        return;
-      }
-
-      try {
-        const res = await fetch("https://melody-backend-7vmo.onrender.com/api/exchange-token", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            code,
-            codeVerifier,
-            state
-          })
-        });
-
-        const data = await res.json();
-
-        if (data.access_token) {
-          localStorage.setItem("spotify_token", data.access_token);
-          localStorage.setItem("selected_genres", decodeURIComponent(state));
-
-          // ✅ Redirect back to main page
-          window.location.href = "https://developerprajjal.github.io/birthday-for-oishi/#playlist";
-        } else {
-          console.error(data);
-          document.body.innerHTML = "<h2>Spotify login failed. Please try again.</h2>";
-        }
-      } catch (err) {
-        console.error(err);
-        document.body.innerHTML = "<h2>Something went wrong.</h2>";
-      }
+    if (!code || !codeVerifier) {
+      document.body.innerHTML = "<h2>Spotify login failed. Please try again.</h2>";
+      return;
     }
 
-    exchangeToken();
-  </script>
+    try {
+      const res = await fetch("https://melody-backend-7vmo.onrender.com/api/exchange-token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          code,
+          codeVerifier,
+          state
+        })
+      });
+
+      const data = await res.json();
+
+      if (data.access_token) {
+        localStorage.setItem("spotify_token", data.access_token);
+        localStorage.setItem("selected_genres", decodeURIComponent(state));
+
+        // ✅ Redirect back to main page
+        window.location.href = "https://developerprajjal.github.io/birthday-for-oishi/#playlist";
+      } else {
+        document.body.innerHTML = "<h2>Spotify login failed. Please try again.</h2>";
+        console.error("No access_token in response:", data);
+      }
+    } catch (err) {
+      console.error("Error during token exchange:", err);
+      document.body.innerHTML = "<h2>Something went wrong.</h2>";
+    }
+  }
+
+  exchangeToken();
+</script>
+
 </body>
 </html>
