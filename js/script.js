@@ -1,18 +1,13 @@
 // Reveal Main Message with Confetti and Start Music
 document.getElementById("revealBtn").addEventListener("click", () => {
-  // Hide intro, show main message
   document.querySelector(".intro").classList.add("hidden");
   document.getElementById("mainMessage").classList.remove("hidden");
 
-  // 🎶 Start background music on interaction
   const bgMusic = document.getElementById("bgMusic");
   if (bgMusic && bgMusic.paused) {
-    bgMusic.play().catch((e) => {
-      console.warn("Autoplay blocked:", e);
-    });
+    bgMusic.play().catch((e) => console.warn("Autoplay blocked:", e));
   }
 
-  // 🎉 Confetti burst
   confetti({ particleCount: 120, spread: 100, origin: { y: 0.6 } });
 });
 
@@ -23,11 +18,7 @@ document.getElementById("revealImageBtn").addEventListener("click", () => {
 
   if (revealedImg.classList.contains("hidden")) {
     revealedImg.classList.remove("hidden");
-
-    // Show compliment cards shortly after image is revealed
-    setTimeout(() => {
-      surpriseSection.classList.remove("hidden");
-    }, 500);
+    setTimeout(() => surpriseSection.classList.remove("hidden"), 500);
   }
 });
 
@@ -37,7 +28,7 @@ document.getElementById("openEnvelope").addEventListener("click", () => {
   document.getElementById("ducklingDance").classList.remove("hidden");
 });
 
-// Floating Cake Emojis (slow upward effect)
+// Floating Cake Emojis
 const floatingEmojis = ['🎂', '💝', '🎉', '💖', '🐥'];
 setInterval(() => {
   const emoji = document.createElement('div');
@@ -60,16 +51,14 @@ setInterval(() => {
   setTimeout(() => emoji.remove(), 6000);
 }, 400);
 
-// Trail Emoji Logic on Cursor/Touch Move
+// Emoji Trail on Cursor
 const trailEmojis = ['💗', '🎂', '🎉', '🎈', '💖'];
-
 function createTrailEmoji(x, y) {
   const emoji = document.createElement("div");
   emoji.textContent = trailEmojis[Math.floor(Math.random() * trailEmojis.length)];
   emoji.className = "emoji-trail";
   emoji.style.left = x + "px";
   emoji.style.top = y + "px";
-
   document.body.appendChild(emoji);
 
   requestAnimationFrame(() => {
@@ -82,38 +71,33 @@ function createTrailEmoji(x, y) {
 
 let lastX = null;
 let lastY = null;
-
 function shouldSpawn(x, y) {
   if (lastX === null || lastY === null) {
     lastX = x;
     lastY = y;
     return true;
   }
-
   const dx = x - lastX;
   const dy = y - lastY;
   const distance = Math.sqrt(dx * dx + dy * dy);
-
   if (distance > 2) {
     lastX = x;
     lastY = y;
     return true;
   }
-
   return false;
 }
-
 function handleMove(e) {
   const x = e.clientX || (e.touches && e.touches[0].clientX);
   const y = e.clientY || (e.touches && e.touches[0].clientY);
-
   if (x && y && shouldSpawn(x, y)) {
     createTrailEmoji(x, y);
   }
 }
-
 window.addEventListener("mousemove", handleMove);
 window.addEventListener("touchmove", handleMove);
+
+// Duck Game
 const gameLauncher = document.getElementById("gameLauncher");
 const duckGameModal = document.getElementById("duckGameModal");
 const startGameBtn = document.getElementById("startGameBtn");
@@ -163,41 +147,10 @@ startGameBtn.addEventListener("click", () => {
     if (score >= 10) {
       clearInterval(gameInterval);
       document.getElementById("gameSuccess").classList.remove("hidden");
-confetti({ particleCount: 100, spread: 80, origin: { y: 0.6 } });
-document.getElementById("gameSuccess").scrollIntoView({ behavior: "smooth" });
+      confetti({ particleCount: 100, spread: 80, origin: { y: 0.6 } });
+      document.getElementById("gameSuccess").scrollIntoView({ behavior: "smooth" });
       duckGameModal.classList.add("hidden");
       gameArea.innerHTML = "";
     }
   }, 800);
-});
-
-const botButton = document.getElementById("melodyBotBtn");
-const chatbotBox = document.getElementById("melodyChatbot");
-const closeBtn = document.getElementById("closeChatbot");
-const sendBtn = document.getElementById("sendMsg");
-const userInput = document.getElementById("userInput");
-const chatbotBody = document.getElementById("chatbotBody");
-
-// Toggle chatbot on button click
-botButton.addEventListener("click", () => {
-  chatbotBox.classList.toggle("hidden");
-});
-
-// Close button
-closeBtn.addEventListener("click", () => {
-  chatbotBox.classList.add("hidden");
-});
-
-// Add user's message
-sendBtn.addEventListener("click", () => {
-  const msg = userInput.value.trim();
-  if (msg) {
-    const userMsg = document.createElement("div");
-    userMsg.className = "bot-message";
-    userMsg.style.background = "#d4eaff";
-    userMsg.textContent = msg;
-    chatbotBody.appendChild(userMsg);
-    userInput.value = "";
-    chatbotBody.scrollTop = chatbotBody.scrollHeight;
-  }
 });
