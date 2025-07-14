@@ -140,14 +140,14 @@ async function initiateSpotifyLogin(genres) {
 // 🎵 Playlist Generation from Backend
 async function generatePlaylist(token, genres) {
   try {
-    const res = await fetch("https://melody-backend-7vmo.onrender.com/api/create-playlist", {
+    const res = await fetch("https://your-backend.onrender.com/api/create-playlist", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
         access_token: token,
-        genres: genres.split(",").map((g) => g.trim())
+        genres: genres.split(",").map(g => g.trim())
       })
     });
 
@@ -157,10 +157,11 @@ async function generatePlaylist(token, genres) {
       appendMessage("bot", "Here's your custom Spotify playlist! 🎶");
       appendSpotifyButton(data.playlist_url);
     } else {
-      appendMessage("bot", "Oops! Couldn't generate the playlist. Please try again.");
+      appendMessage("bot", "Oops! Couldn't generate the playlist. Try again.");
     }
   } catch (err) {
-    console.error("Playlist Error:", err);
-    appendMessage("bot", "Something went wrong while fetching your playlist.");
+    console.error("Error:", err);
+    appendMessage("bot", "Something went wrong on the server.");
   }
 }
+
