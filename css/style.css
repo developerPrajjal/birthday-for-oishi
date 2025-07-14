@@ -1350,3 +1350,57 @@ body div.emoji-trail {
   border-radius: 12px;
   cursor: pointer;
 }
+/* --- Chatbot Input Area Fix --- */
+#chatbotInputArea {
+  display: flex;
+  padding: 10px;
+  border-top: 1px solid #ddd;
+  background-color: #fff;
+}
+
+#userInput {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  margin-right: 8px;
+  font-size: 14px;
+  outline: none;
+}
+
+#sendMsg {
+  background-color: #ff4da6; /* Cute pink */
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+#sendMsg:hover {
+  background-color: #e04394;
+}
+
+/* --- Spotify Button Themed --- */
+.spotify-btn {
+  background-color: #ff69b4; /* Themed pink */
+  color: white;
+  padding: 10px 18px;
+  margin-top: 10px;
+  font-size: 14px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-weight: bold;
+}
+
+.spotify-btn:hover {
+  background-color: #e0559e;
+}
