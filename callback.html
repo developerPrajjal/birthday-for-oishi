@@ -2,26 +2,44 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Spotify Auth Callback</title>
-  <script>
-    // Extract access token from URL
-    window.onload = function () {
-      const hash = window.location.hash;
-      const token = new URLSearchParams(hash.substring(1)).get("access_token");
-
-      if (token) {
-        // Store token in localStorage (or send to chatbot)
-        localStorage.setItem("spotify_token", token);
-
-        // Redirect back to main page
-        window.location.href = "https://developerprajjal.github.io/birthday-for-oishi/";
-      } else {
-        document.body.innerHTML = "<h2>Spotify login failed. Please try again.</h2>";
-      }
-    };
-  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Authenticating...</title>
 </head>
 <body>
   <p>Authenticating with Spotify...</p>
+  <script>
+    // Extract authorization code and state from URL
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+    const state = params.get("state");
+
+    // Get code_verifier from sessionStorage
+    const codeVerifier = sessionStorage.getItem("code_verifier");
+
+    // Send POST to your backend to exchange code for access token
+    fetch("https://melody-backend-7vmo.onrender.com/token", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        code,
+        code_verifier: codeVerifier,
+        redirect_uri: "https://developerprajjal.github.io/birthday-for-oishi/callback.html"
+      })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.access_token) {
+        // Save token and redirect back to chatbot
+        localStorage.setItem("spotify_token", data.access_token);
+        localStorage.setItem("selected_genres", state); // recover genre choice
+        window.location.href = "index.html#playlist";
+      } else {
+        document.body.innerHTML = "<p>Spotify login failed. Please try again.</p>";
+      }
+    })
+    .catch(() => {
+      document.body.innerHTML = "<p>Something went wrong. Try again later.</p>";
+    });
+  </script>
 </body>
 </html>
