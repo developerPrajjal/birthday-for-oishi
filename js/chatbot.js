@@ -15,7 +15,7 @@ chatbotLauncher.addEventListener("click", () => {
   melodyChatbot.classList.remove("hidden");
   chatbotCloud.classList.add("hidden");
 
-  // ✅ Only show messages after Spotify redirect and only on chatbot open
+  // Only show message once after Spotify login redirect
   if (window.location.hash.includes("playlist")) {
     const token = localStorage.getItem("spotify_token");
     const genres = localStorage.getItem("selected_genres");
@@ -23,10 +23,13 @@ chatbotLauncher.addEventListener("click", () => {
     if (token && genres) {
       appendMessage("bot", "Hello Oishi, hope you are having a great day! 😀");
       appendMessage("bot", `🎵 You previously selected: ${genres}`);
-      appendMessage("bot", "If you've already logged in, your playlist will appear shortly!");
+      appendMessage("bot", "Hang tight! I’m fetching your playlist now...");
 
-      // ✅ Clean the URL hash to prevent repeat messages
+      // Clean the hash
       history.replaceState(null, "", window.location.pathname);
+
+      // Fetch playlist
+      generatePlaylist(token, genres);
     }
   }
 });
@@ -35,14 +38,11 @@ chatbotLauncher.addEventListener("click", () => {
 closeChatbot.addEventListener("click", () => {
   melodyChatbot.classList.add("hidden");
   chatbotCloud.classList.remove("hidden");
-
-  // Optional: clear previous messages when closed
-  // chatbotBody.innerHTML = "";
 });
 
-// Send message
+// Message send handlers
 sendMsg.addEventListener("click", handleUserMessage);
-userInput.addEventListener("keypress", function (e) {
+userInput.addEventListener("keypress", (e) => {
   if (e.key === "Enter") handleUserMessage();
 });
 
@@ -64,6 +64,19 @@ function appendMessage(sender, text) {
   chatbotBody.scrollTop = chatbotBody.scrollHeight;
 }
 
+function appendSpotifyButton(url) {
+  const button = document.createElement("button");
+  button.textContent = "🎵 Open Spotify";
+  button.className = "spotify-btn";
+  button.onclick = () => window.open(url, "_blank");
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "bot-message";
+  wrapper.appendChild(button);
+  chatbotBody.appendChild(wrapper);
+  chatbotBody.scrollTop = chatbotBody.scrollHeight;
+}
+
 function handleBotResponse(userMsg) {
   if (step === 0) {
     appendMessage("bot", "Awesome! 🎧 What genre(s) of music do you love? You can mention more than one.");
@@ -78,21 +91,19 @@ function handleBotResponse(userMsg) {
   }
 }
 
-// 🔐 PKCE Helpers for Spotify Auth
+// 🎵 Spotify Login Flow with PKCE
 async function generateCodeChallenge(codeVerifier) {
   const encoder = new TextEncoder();
   const data = encoder.encode(codeVerifier);
-  const digest = await window.crypto.subtle.digest("SHA-256", data);
+  const digest = await crypto.subtle.digest("SHA-256", data);
   return btoa(String.fromCharCode(...new Uint8Array(digest)))
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=+$/, "");
+    .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
 
 function generateRandomString(length) {
   const array = new Uint8Array(length);
-  window.crypto.getRandomValues(array);
-  return Array.from(array, (byte) => ('0' + (byte & 0xff).toString(16)).slice(-2)).join("");
+  crypto.getRandomValues(array);
+  return Array.from(array, byte => ('0' + (byte & 0xff).toString(16)).slice(-2)).join('');
 }
 
 async function initiateSpotifyLogin(genres) {
@@ -102,22 +113,39 @@ async function initiateSpotifyLogin(genres) {
   const codeVerifier = generateRandomString(64);
   const codeChallenge = await generateCodeChallenge(codeVerifier);
 
-  // Save code_verifier + genre to use after redirect
   sessionStorage.setItem("code_verifier", codeVerifier);
   localStorage.setItem("selected_genres", genres.join(","));
 
   const authUrl = `https://accounts.spotify.com/authorize?response_type=code&client_id=${clientId}&scope=playlist-modify-public&redirect_uri=${encodeURIComponent(redirectUri)}&state=${state}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
 
-  appendMessage("bot", "Click the button below to log in with Spotify and get your custom playlist!");
+  appendMessage("bot", "Click below to login and get your custom playlist:");
+  appendSpotifyButton(authUrl);
+}
 
-  const button = document.createElement("button");
-  button.textContent = "🎵 Open Spotify";
-  button.className = "spotify-btn";
-  button.onclick = () => window.open(authUrl, "_blank");
+// 🎵 Playlist Generation from Backend
+async function generatePlaylist(token, genres) {
+  try {
+    const res = await fetch("https://melody-backend-7vmo.onrender.com/api/create-playlist", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        access_token: token,
+        genres: genres.split(",").map((g) => g.trim())
+      })
+    });
 
-  const wrapper = document.createElement("div");
-  wrapper.className = "bot-message";
-  wrapper.appendChild(button);
-  chatbotBody.appendChild(wrapper);
-  chatbotBody.scrollTop = chatbotBody.scrollHeight;
+    const data = await res.json();
+
+    if (data.playlist_url) {
+      appendMessage("bot", "Here's your custom Spotify playlist! 🎶");
+      appendSpotifyButton(data.playlist_url);
+    } else {
+      appendMessage("bot", "Oops! Couldn't generate the playlist. Please try again.");
+    }
+  } catch (err) {
+    console.error("Playlist Error:", err);
+    appendMessage("bot", "Something went wrong while fetching your playlist.");
+  }
 }
