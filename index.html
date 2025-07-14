@@ -6,7 +6,6 @@
   <title>Happy Birthday Oishi 🎂</title>
   <link rel="stylesheet" href="css/style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
@@ -52,7 +51,7 @@
         </div>
       </div>
 
-      <!-- Compliment Surprise (No Button) -->
+      <!-- Compliment Surprise -->
       <div class="surprise-extra hidden" id="surpriseSection">
         <div class="extra-cards" id="extraCards">
           <div class="card">💫 You radiate light like a star even on cloudy days.</div>
@@ -65,7 +64,6 @@
       <div class="letter-section">
         <h3>Got Some Birthday Letters ✉️ for YOU</h3>
         <img src="assets/envelope.png" class="envelope" id="openEnvelope" alt="Envelope"/>
-        
         <div class="letters hidden" id="letters">
           <div class="card">🌸 You bring calmness in a world full of noise. Happy Birthday!</div>
           <div class="card">🌟 May every wish you whisper today become your reality tomorrow.</div>
@@ -88,10 +86,9 @@
 
     <!-- 🎮 Game Launch Button -->
     <div id="gameLauncher">🎮</div>
+  </div>
 
-    
-
-  <!-- 🐥 Duckling Catch Game Modal -->
+  <!-- Duck Game Modal -->
   <div id="duckGameModal" class="hidden">
     <div class="game-box">
       <h2>🐥 Catch the Ducklings!</h2>
@@ -115,7 +112,6 @@
     </div>
   </div>
 
-
   <!-- Background Music -->
   <audio id="bgMusic" preload="auto" loop>
     <source src="assets/birthday.mp3" type="audio/mpeg" />
@@ -124,41 +120,32 @@
   <!-- Floating Cake Emojis -->
   <div class="cake-container" id="cakeContainer"></div>
 
-  <!-- Script -->
-  <script src="js/script.js"></script>
-
-  <!-- 🎵 Chatbot Launcher Button -->
-<div id="chatbotLauncher">
-  <img src="assets/bot.jpg" alt="MelodyBot" />
-</div>
-
-<!-- Chatbot Cloud Prompt -->
-<div id="chatbotCloud" class="chatbot-cloud">
-  Hey, I’m MelodyAI. Click to reveal surprise!
-</div>
-
-<!-- MelodyAI Chatbot Box -->
-<div id="melodyChatbot" class="hidden">
-  <div class="chatbot-header">
-    <span>🎀 MelodyAI</span>
-    <button id="closeChatbot">✖</button>
+  <!-- Chatbot -->
+  <div id="chatbotLauncher">
+    <img src="assets/bot.jpg" alt="MelodyBot" />
   </div>
-  <div class="chatbot-body" id="chatbotBody">
-    <div class="bot-message">Hello Oishi, hope you are having a great day! 😀</div>
+
+  <div id="chatbotCloud" class="chatbot-cloud">
+    Hey, I’m MelodyAI. Click to reveal surprise!
   </div>
-  <div class="chatbot-input">
-    <input type="text" id="userInput" placeholder="Type your message..." />
-    <button id="sendMsg">Send</button>
+
+  <div id="melodyChatbot" class="hidden">
+    <div class="chatbot-header">
+      <span>🎀 MelodyAI</span>
+      <button id="closeChatbot">✖</button>
+    </div>
+    <div class="chatbot-body" id="chatbotBody">
+      <div class="bot-message">Hello Oishi, hope you are having a great day! 😀</div>
+    </div>
+    <div class="chatbot-input">
+      <input type="text" id="userInput" placeholder="Type your message..." />
+      <button id="sendMsg">Send</button>
+    </div>
   </div>
-</div>
 
-<script src="js/script.js"></script>
-<script src="js/chatbot.js"></script>
-</body>
-</html>
-
-
-
+  <!-- Scripts (loaded at end of body for proper execution) -->
+  <script src="js/script.js" defer></script>
+  <script src="js/chatbot.js" defer></script>
 
 </body>
 </html>
