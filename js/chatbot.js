@@ -10,18 +10,37 @@ const chatbotBody = document.getElementById("chatbotBody");
 let step = 0;
 let selectedGenres = [];
 
-// Show/Hide chatbot
+// Show chatbot
 chatbotLauncher.addEventListener("click", () => {
   melodyChatbot.classList.remove("hidden");
   chatbotCloud.classList.add("hidden");
+
+  // ✅ Only show messages after Spotify redirect and only on chatbot open
+  if (window.location.hash.includes("playlist")) {
+    const token = localStorage.getItem("spotify_token");
+    const genres = localStorage.getItem("selected_genres");
+
+    if (token && genres) {
+      appendMessage("bot", "Hello Oishi, hope you are having a great day! 😀");
+      appendMessage("bot", `🎵 You previously selected: ${genres}`);
+      appendMessage("bot", "If you've already logged in, your playlist will appear shortly!");
+
+      // ✅ Clean the URL hash to prevent repeat messages
+      history.replaceState(null, "", window.location.pathname);
+    }
+  }
 });
 
+// Hide chatbot
 closeChatbot.addEventListener("click", () => {
   melodyChatbot.classList.add("hidden");
   chatbotCloud.classList.remove("hidden");
+
+  // Optional: clear previous messages when closed
+  // chatbotBody.innerHTML = "";
 });
 
-// Handle message send
+// Send message
 sendMsg.addEventListener("click", handleUserMessage);
 userInput.addEventListener("keypress", function (e) {
   if (e.key === "Enter") handleUserMessage();
@@ -51,7 +70,6 @@ function handleBotResponse(userMsg) {
     step = 1;
   } else if (step === 1) {
     selectedGenres = userMsg.split(",").map((genre) => genre.trim());
-    localStorage.setItem("selected_genres", selectedGenres.join(", "));
     appendMessage("bot", `Great taste! Creating a custom playlist for: ${selectedGenres.join(", ")}`);
     initiateSpotifyLogin(selectedGenres);
     step = 2;
@@ -60,11 +78,11 @@ function handleBotResponse(userMsg) {
   }
 }
 
-// PKCE helpers
+// 🔐 PKCE Helpers for Spotify Auth
 async function generateCodeChallenge(codeVerifier) {
   const encoder = new TextEncoder();
   const data = encoder.encode(codeVerifier);
-  const digest = await crypto.subtle.digest("SHA-256", data);
+  const digest = await window.crypto.subtle.digest("SHA-256", data);
   return btoa(String.fromCharCode(...new Uint8Array(digest)))
     .replace(/\+/g, "-")
     .replace(/\//g, "_")
@@ -73,7 +91,7 @@ async function generateCodeChallenge(codeVerifier) {
 
 function generateRandomString(length) {
   const array = new Uint8Array(length);
-  crypto.getRandomValues(array);
+  window.crypto.getRandomValues(array);
   return Array.from(array, (byte) => ('0' + (byte & 0xff).toString(16)).slice(-2)).join("");
 }
 
@@ -84,8 +102,9 @@ async function initiateSpotifyLogin(genres) {
   const codeVerifier = generateRandomString(64);
   const codeChallenge = await generateCodeChallenge(codeVerifier);
 
-  // Store for use in callback
-  localStorage.setItem("code_verifier", codeVerifier);
+  // Save code_verifier + genre to use after redirect
+  sessionStorage.setItem("code_verifier", codeVerifier);
+  localStorage.setItem("selected_genres", genres.join(","));
 
   const authUrl = `https://accounts.spotify.com/authorize?response_type=code&client_id=${clientId}&scope=playlist-modify-public&redirect_uri=${encodeURIComponent(redirectUri)}&state=${state}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
 
@@ -102,23 +121,3 @@ async function initiateSpotifyLogin(genres) {
   chatbotBody.appendChild(wrapper);
   chatbotBody.scrollTop = chatbotBody.scrollHeight;
 }
-
-// Handle redirect state if coming back from Spotify
-window.addEventListener("load", () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const code = urlParams.get("code");
-  const state = urlParams.get("state");
-
-  if (code) {
-    appendMessage("bot", "✅ Spotify login successful! Fetching your playlist soon...");
-    localStorage.setItem("spotify_code", code);
-    if (state) localStorage.setItem("selected_genres", decodeURIComponent(state));
-    // Optionally: Trigger a backend call to generate playlist here
-  }
-
-  const storedGenres = localStorage.getItem("selected_genres");
-  if (storedGenres && !code) {
-    appendMessage("bot", `🎵 You previously selected: ${storedGenres}`);
-    appendMessage("bot", "If you've already logged in, your playlist will appear shortly!");
-  }
-});
