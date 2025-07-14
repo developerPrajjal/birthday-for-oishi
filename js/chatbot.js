@@ -19,6 +19,9 @@ chatbotLauncher.addEventListener("click", () => {
   if (window.location.hash.includes("playlist")) {
     const token = localStorage.getItem("spotify_token");
     const genres = localStorage.getItem("selected_genres");
+    console.log("Token:", token);
+console.log("Genres:", genres);
+
 
     if (token && genres) {
       appendMessage("bot", "Hello Oishi, hope you are having a great day! 😀");
