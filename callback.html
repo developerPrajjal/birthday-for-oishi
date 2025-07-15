@@ -3,54 +3,98 @@
 <head>
   <meta charset="UTF-8" />
   <title>Spotify Callback</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: #f9f1f8;
+      color: #444;
+      text-align: center;
+      padding-top: 100px;
+    }
+
+    .loading {
+      font-size: 20px;
+      font-weight: 500;
+    }
+
+    .dot-typing {
+      display: inline-block;
+      width: 1em;
+      height: 1em;
+      vertical-align: middle;
+      border-radius: 50%;
+      background: #ff66b2;
+      animation: bounce 1s infinite ease-in-out alternate;
+    }
+
+    .dot-typing:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .dot-typing:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes bounce {
+      to {
+        transform: translateY(-10px);
+        opacity: 0.3;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h2>Redirecting... Please wait.</h2>
+  <div class="loading">
+    MelodyAI is preparing your playlist<br><br>
+    <span class="dot-typing"></span>
+    <span class="dot-typing"></span>
+    <span class="dot-typing"></span>
+  </div>
+
   <script>
-  async function exchangeToken() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get("code");
-    const state = urlParams.get("state"); // genres
-    const codeVerifier = sessionStorage.getItem("code_verifier");
+    async function exchangeToken() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get("code");
+      const state = urlParams.get("state"); // genres
+      const codeVerifier = sessionStorage.getItem("code_verifier");
 
-    if (!code || !codeVerifier) {
-      document.body.innerHTML = "<h2>Spotify login failed. Please try again.</h2>";
-      return;
-    }
-
-    try {
-      const res = await fetch("https://melody-backend-7vmo.onrender.com/api/exchange-token", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          code,
-          codeVerifier,
-          state
-        })
-      });
-
-      const data = await res.json();
-
-      if (data.access_token) {
-        localStorage.setItem("spotify_token", data.access_token);
-        localStorage.setItem("selected_genres", decodeURIComponent(state));
-
-        // ✅ Redirect back to main page
-        window.location.href = "https://developerprajjal.github.io/birthday-for-oishi/#playlist";
-      } else {
+      if (!code || !codeVerifier) {
         document.body.innerHTML = "<h2>Spotify login failed. Please try again.</h2>";
-        console.error("No access_token in response:", data);
+        return;
       }
-    } catch (err) {
-      console.error("Error during token exchange:", err);
-      document.body.innerHTML = "<h2>Something went wrong.</h2>";
+
+      try {
+        const res = await fetch("https://melody-backend-7vmo.onrender.com/api/exchange-token", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            code,
+            codeVerifier,
+            state
+          })
+        });
+
+        const data = await res.json();
+
+        if (data.access_token) {
+          localStorage.setItem("spotify_token", data.access_token);
+          localStorage.setItem("selected_genres", decodeURIComponent(state));
+
+          // ✅ Redirect back to the birthday site
+          window.location.href = "https://developerprajjal.github.io/birthday-for-oishi/#playlist";
+        } else {
+          document.body.innerHTML = "<h2>Spotify login failed. Please try again.</h2>";
+          console.error("No access_token in response:", data);
+        }
+      } catch (err) {
+        console.error("Error during token exchange:", err);
+        document.body.innerHTML = "<h2>Something went wrong. Please try again.</h2>";
+      }
     }
-  }
 
-  exchangeToken();
-</script>
-
+    exchangeToken();
+  </script>
 </body>
 </html>
