@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   let step = 0;
   let userData = {
-    name: "Oishi", // You can personalize this further if needed
+    name: "Oishi",
     genres: []
   };
 
@@ -53,8 +53,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (step === 1) {
         userData.genres.push(...msg.split(",").map(g => g.trim().toLowerCase()));
-        appendMessage("bot", "Great taste! 🎶 Now let’s connect to Spotify to build your playlist.");
-        requestSpotifyAuth();
+        appendMessage("bot", "Great taste! 🎶 Now let’s build your playlist!");
+        generatePlaylist();
         step = 2;
       }
     }
@@ -87,31 +87,22 @@ document.addEventListener("DOMContentLoaded", function () {
     chatbotBody.scrollTop = chatbotBody.scrollHeight;
   }
 
-  function requestSpotifyAuth() {
-    fetch("https://melody-backend.onrender.com/api/auth")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.auth_url) {
-          appendMessage("bot", "Click below to login and get your custom playlist:");
-          appendSpotifyButton(data.auth_url);
-        } else {
-          appendMessage("bot", "Something went wrong connecting to Spotify 😢");
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        appendMessage("bot", "Error connecting to backend.");
-      });
-  }
-
-  // This function should be called by your frontend after auth success (via redirect or polling)
   function generatePlaylist() {
-    fetch("https://melody-backend.onrender.com/api/playlist", {
+    const access_token = prompt("Please paste your Spotify access token:");
+    if (!access_token) {
+      appendMessage("bot", "Access token is required to create your playlist.");
+      return;
+    }
+
+    fetch("https://melody-backend.onrender.com/api/create-playlist", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(userData)
+      body: JSON.stringify({
+        access_token,
+        genres: userData.genres
+      })
     })
       .then((res) => res.json())
       .then((data) => {
@@ -127,7 +118,4 @@ document.addEventListener("DOMContentLoaded", function () {
         appendMessage("bot", "Server error while generating playlist.");
       });
   }
-
-  // Optional: Call this manually for now
-  // setTimeout(generatePlaylist, 15000);
 });
