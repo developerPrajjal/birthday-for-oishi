@@ -13,6 +13,15 @@ document.addEventListener("DOMContentLoaded", function () {
     genres: []
   };
 
+  // Auto-check if token exists from previous login
+  const storedToken = localStorage.getItem("spotify_token");
+  const storedGenres = localStorage.getItem("selected_genres");
+
+  if (storedToken && storedGenres) {
+    userData.genres = storedGenres.split(",");
+    generatePlaylistWithToken(storedToken);
+  }
+
   // Launch chatbot
   chatbotLauncher.addEventListener("click", function () {
     chatbot.classList.remove("hidden");
@@ -33,10 +42,8 @@ document.addEventListener("DOMContentLoaded", function () {
     chatbotCloud.style.display = "block";
   });
 
-  // Send button click
   sendBtn.addEventListener("click", handleUserMessage);
 
-  // Press Enter to send
   userInput.addEventListener("keypress", function (e) {
     if (e.key === "Enter") {
       handleUserMessage();
@@ -51,7 +58,6 @@ document.addEventListener("DOMContentLoaded", function () {
       chatbotBody.scrollTop = chatbotBody.scrollHeight;
 
       if (step === 1) {
-        // Store genres
         userData.genres = msg.split(",").map(g => g.trim().toLowerCase());
         appendMessage("bot", "Great taste! 🎶 Now click below to connect to Spotify to build your playlist.");
         appendSpotifyAuthButton();
@@ -76,26 +82,86 @@ document.addEventListener("DOMContentLoaded", function () {
     const button = document.createElement("button");
     button.textContent = "🎵 Connect to Spotify";
     button.className = "spotify-btn";
-    button.onclick = () => {
-      fetch("https://melody-backend.onrender.com/api/auth")
-        .then(res => res.json())
-        .then(data => {
-          if (data.auth_url) {
-            window.open(data.auth_url, "_blank");
-            appendMessage("bot", "Once you’re logged in, I’ll handle the rest automatically 🎧");
-          } else {
-            appendMessage("bot", "Something went wrong getting the login link 😢");
-          }
-        })
-        .catch(() => {
-          appendMessage("bot", "Error connecting to backend.");
-        });
-    };
+    button.onclick = () => redirectToSpotifyAuth(userData.genres);
 
     const wrapper = document.createElement("div");
     wrapper.className = "bot-message";
     wrapper.appendChild(button);
     chatbotBody.appendChild(wrapper);
     chatbotBody.scrollTop = chatbotBody.scrollHeight;
+  }
+
+  function redirectToSpotifyAuth(genres) {
+    const clientId = "9d4c5c3068574999b5ce2dea3bf5db54"; // Replace this with your Spotify client ID
+    const redirectUri = "https://developerprajjal.github.io/birthday-for-oishi/callback.html";
+    const scope = "playlist-modify-public playlist-modify-private";
+    const state = encodeURIComponent(genres.join(","));
+
+    const codeVerifier = generateCodeVerifier();
+    generateCodeChallenge(codeVerifier).then(codeChallenge => {
+      sessionStorage.setItem("code_verifier", codeVerifier);
+
+      const authUrl = `https://accounts.spotify.com/authorize?response_type=code&client_id=${clientId}&scope=${scope}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${state}&code_challenge_method=S256&code_challenge=${codeChallenge}`;
+      window.location.href = authUrl;
+    });
+  }
+
+  function generatePlaylistWithToken(token) {
+    appendMessage("bot", "You're back! Creating your custom playlist now 🎧...");
+
+    fetch("https://melody-backend-7vmo.onrender.com/api/playlist", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        token: token,
+        genres: userData.genres
+      })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.playlist_url) {
+        appendMessage("bot", "Here’s your custom Spotify playlist! 🎉");
+        appendSpotifyButton(data.playlist_url);
+      } else {
+        appendMessage("bot", "Oops! Couldn't generate your playlist.");
+      }
+    })
+    .catch(() => {
+      appendMessage("bot", "Server error while generating playlist.");
+    });
+  }
+
+  function appendSpotifyButton(url) {
+    const link = document.createElement("a");
+    link.href = url;
+    link.textContent = "🎧 Open Playlist on Spotify";
+    link.className = "spotify-btn";
+    link.target = "_blank";
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "bot-message";
+    wrapper.appendChild(link);
+    chatbotBody.appendChild(wrapper);
+    chatbotBody.scrollTop = chatbotBody.scrollHeight;
+  }
+
+  function generateCodeVerifier() {
+    const array = new Uint32Array(56);
+    window.crypto.getRandomValues(array);
+    return Array.from(array, dec => ('0' + dec.toString(16)).slice(-2)).join('');
+  }
+
+  function generateCodeChallenge(codeVerifier) {
+    return sha256base64url(codeVerifier);
+  }
+
+  async function sha256base64url(input) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(input);
+    const digest = await crypto.subtle.digest("SHA-256", data);
+    return btoa(String.fromCharCode(...new Uint8Array(digest)))
+      .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
   }
 });
