@@ -9,17 +9,15 @@
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get("code");
     const state = urlParams.get("state");
-    const verifier = localStorage.getItem("code_verifier");
+    const codeVerifier = localStorage.getItem("code_verifier");
 
-    fetch("https://accounts.spotify.com/api/token", {
+    fetch("https://melody-backend-7vmo.onrender.com/api/exchange-token", {
       method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({
-        client_id: "9d4c5c3068574999b5ce2dea3bf5db54",
-        grant_type: "authorization_code",
-        code: code,
-        redirect_uri: "https://developerprajjal.github.io/birthday-for-oishi/callback.html",
-        code_verifier: verifier
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        code,
+        codeVerifier,
+        state
       })
     })
     .then(res => res.json())
