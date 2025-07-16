@@ -1,96 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
   <title>Spotify Callback</title>
-  <style>
-    body {
-      font-family: "Segoe UI", sans-serif;
-      background: #f9f1f8;
-      color: #444;
-      text-align: center;
-      padding-top: 100px;
-    }
-    .loading {
-      font-size: 20px;
-      font-weight: 500;
-    }
-    .dot-typing {
-      display: inline-block;
-      width: 1em;
-      height: 1em;
-      vertical-align: middle;
-      border-radius: 50%;
-      background: #ff66b2;
-      animation: bounce 1s infinite ease-in-out alternate;
-    }
-    .dot-typing:nth-child(2) {
-      animation-delay: 0.2s;
-    }
-    .dot-typing:nth-child(3) {
-      animation-delay: 0.4s;
-    }
-    @keyframes bounce {
-      to {
-        transform: translateY(-10px);
-        opacity: 0.3;
-      }
-    }
-  </style>
 </head>
 <body>
-  <div class="loading">
-    MelodyAI is preparing your playlist<br><br>
-    <span class="dot-typing"></span>
-    <span class="dot-typing"></span>
-    <span class="dot-typing"></span>
-  </div>
-
+  <h2>Generating your playlist... please wait</h2>
   <script>
-  async function exchangeToken() {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get("code");
-    const state = urlParams.get("state"); // genres
-    const codeVerifier = localStorage.getItem("code_verifier");
+    const state = urlParams.get("state");
+    const verifier = localStorage.getItem("code_verifier");
 
-    if (!code || !codeVerifier) {
-      document.body.innerHTML = "<h2>Spotify login failed. Missing credentials. Please try again.</h2>";
-      return;
-    }
-
-    try {
-      const res = await fetch("https://melody-backend-7vmo.onrender.com/api/exchange-token", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          code,
-          codeVerifier,
-          state
-        })
-      });
-
-      const data = await res.json();
-
+    fetch("https://accounts.spotify.com/api/token", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        client_id: "9d4c5c3068574999b5ce2dea3bf5db54",
+        grant_type: "authorization_code",
+        code: code,
+        redirect_uri: "https://developerprajjal.github.io/birthday-for-oishi/callback.html",
+        code_verifier: verifier
+      })
+    })
+    .then(res => res.json())
+    .then(data => {
       if (data.access_token) {
         localStorage.setItem("spotify_token", data.access_token);
         localStorage.setItem("selected_genres", decodeURIComponent(state));
-
-        // ✅ Redirect back to the chatbot with #playlist
         window.location.href = "https://developerprajjal.github.io/birthday-for-oishi/#playlist";
       } else {
-        document.body.innerHTML = "<h2>Spotify login failed. Please try again.</h2>";
-        console.error("No access_token in response:", data);
+        document.body.innerHTML = "<h3>Failed to retrieve access token 😢</h3>";
+        console.error("Token error:", data);
       }
-    } catch (err) {
-      console.error("Error during token exchange:", err);
-      document.body.innerHTML = "<h2>Something went wrong. Please try again.</h2>";
-    }
-  }
-
-  exchangeToken();
-</script>
-
+    })
+    .catch(err => {
+      document.body.innerHTML = "<h3>Unexpected error occurred</h3>";
+      console.error("Callback error:", err);
+    });
+  </script>
 </body>
 </html>
