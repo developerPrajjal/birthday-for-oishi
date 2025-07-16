@@ -11,13 +11,15 @@
     const state = urlParams.get("state");
     const codeVerifier = localStorage.getItem("code_verifier");
 
+    const redirectUri = "https://developerprajjal.github.io/birthday-for-oishi/callback.html";
+
     fetch("https://melody-backend-7vmo.onrender.com/api/exchange-token", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         code,
         codeVerifier,
-        state
+        redirectUri // ✅ Important: Add this field
       })
     })
     .then(res => res.json())
