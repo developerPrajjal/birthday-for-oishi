@@ -13,7 +13,6 @@ document.addEventListener("DOMContentLoaded", function () {
     genres: []
   };
 
-  // Launch chatbot
   chatbotLauncher.addEventListener("click", function () {
     chatbot.classList.remove("hidden");
     chatbotCloud.style.display = "none";
@@ -24,7 +23,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Close chatbot
   closeBtn.addEventListener("click", function () {
     chatbot.classList.add("hidden");
     chatbotCloud.style.display = "block";
@@ -46,7 +44,6 @@ document.addEventListener("DOMContentLoaded", function () {
     chatbotBody.scrollTop = chatbotBody.scrollHeight;
 
     if (step === 1) {
-      // Greeting received, now ask genre
       setTimeout(() => {
         appendMessage("bot", "Tell me your favorite music genres (comma-separated, like pop, indie, lo-fi):");
         step = 2;
@@ -96,9 +93,9 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Playlist generation after redirect
   const storedToken = localStorage.getItem("spotify_token");
   const storedGenres = localStorage.getItem("selected_genres");
+
   if (storedToken && storedGenres && window.location.hash === "#playlist") {
     chatbot.classList.remove("hidden");
     chatbotCloud.style.display = "none";
@@ -117,22 +114,25 @@ document.addEventListener("DOMContentLoaded", function () {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ access_token: token, genres }) // ✅ Correct key
+      body: JSON.stringify({
+        access_token: token,
+        genres: genres
+      })
     })
-    .then(res => res.json())
-    .then(data => {
-      if (data.playlist_url) {
-        appendMessage("bot", "Here’s your custom Spotify playlist! 🎉");
-        appendSpotifyButton(data.playlist_url);
-      } else {
-        console.error("Playlist creation failed:", data); // ✅ For debug
-        appendMessage("bot", "Oops! Couldn't generate your playlist.");
-      }
-    })
-    .catch(err => {
-      console.error("Server error:", err);
-      appendMessage("bot", "Server error while generating playlist.");
-    });
+      .then(res => res.json())
+      .then(data => {
+        if (data.playlist_url) {
+          appendMessage("bot", "Here’s your custom Spotify playlist! 🎉");
+          appendSpotifyButton(data.playlist_url);
+        } else {
+          console.error("Playlist error:", data);
+          appendMessage("bot", "Oops! Couldn't generate your playlist.");
+        }
+      })
+      .catch(err => {
+        console.error("Fetch error:", err);
+        appendMessage("bot", "Server error while generating playlist.");
+      });
   }
 
   function appendSpotifyButton(url) {
