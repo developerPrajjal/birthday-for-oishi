@@ -13,59 +13,50 @@ document.addEventListener("DOMContentLoaded", function () {
     genres: []
   };
 
-  const storedToken = localStorage.getItem("spotify_token");
-  const storedGenres = localStorage.getItem("selected_genres");
-
-  // Check if previous token & genres are valid before restoring
-  if (storedToken && storedGenres) {
-    userData.genres = storedGenres.split(",");
-    appendMessage("bot", "Welcome back Oishi! 💖 Let's recreate your playlist from earlier! 🎧");
-    generatePlaylistWithToken(storedToken, true); // pass auto flag
-    step = 2;
-  }
-
+  // Launch chatbot
   chatbotLauncher.addEventListener("click", function () {
     chatbot.classList.remove("hidden");
     chatbotCloud.style.display = "none";
 
     if (step === 0) {
       appendMessage("bot", "Hi Oishi! 💖 I'm your music buddy MelodyAI! Let’s pick a custom playlist for you!");
-      setTimeout(() => {
-        askGenre();
-        step = 1;
-      }, 1200);
+      step = 1;
     }
   });
 
+  // Close chatbot
   closeBtn.addEventListener("click", function () {
     chatbot.classList.add("hidden");
     chatbotCloud.style.display = "block";
   });
 
   sendBtn.addEventListener("click", handleUserMessage);
-
   userInput.addEventListener("keypress", function (e) {
-    if (e.key === "Enter") handleUserMessage();
+    if (e.key === "Enter") {
+      handleUserMessage();
+    }
   });
 
   function handleUserMessage() {
     const msg = userInput.value.trim();
-    if (msg !== "") {
-      appendMessage("user", msg);
-      userInput.value = "";
-      chatbotBody.scrollTop = chatbotBody.scrollHeight;
+    if (msg === "") return;
 
-      if (step === 1) {
-        userData.genres = msg.split(",").map(g => g.trim().toLowerCase());
-        appendMessage("bot", "Great taste! 🎶 Now click below to connect to Spotify to build your playlist.");
-        appendSpotifyAuthButton();
+    appendMessage("user", msg);
+    userInput.value = "";
+    chatbotBody.scrollTop = chatbotBody.scrollHeight;
+
+    if (step === 1) {
+      // Greeting received, now ask genre
+      setTimeout(() => {
+        appendMessage("bot", "Tell me your favorite music genres (comma-separated, like pop, indie, lo-fi):");
         step = 2;
-      }
+      }, 800);
+    } else if (step === 2) {
+      userData.genres = msg.split(",").map(g => g.trim().toLowerCase());
+      appendMessage("bot", "Great taste! 🎶 Now click below to connect to Spotify to build your playlist.");
+      appendSpotifyAuthButton();
+      step = 3;
     }
-  }
-
-  function askGenre() {
-    appendMessage("bot", "Tell me your favorite music genres (comma-separated, like pop, indie, lo-fi):");
   }
 
   function appendMessage(sender, text) {
@@ -90,30 +81,42 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function redirectToSpotifyAuth(genres) {
-    const clientId = "9d4c5c3068574999b5ce2dea3bf5db54";
+    const clientId = "9d4c5c3068574999b5ce2dea3bf5db54"; // Your Spotify client ID
     const redirectUri = "https://developerprajjal.github.io/birthday-for-oishi/callback.html";
     const scope = "playlist-modify-public playlist-modify-private";
     const state = encodeURIComponent(genres.join(","));
 
     const codeVerifier = generateCodeVerifier();
-    generateCodeChallenge(codeVerifier).then(codeChallenge => {
-      localStorage.setItem("code_verifier", codeVerifier);
+    localStorage.setItem("code_verifier", codeVerifier);
 
+    generateCodeChallenge(codeVerifier).then(codeChallenge => {
       const authUrl = `https://accounts.spotify.com/authorize?response_type=code&client_id=${clientId}&scope=${scope}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${state}&code_challenge_method=S256&code_challenge=${codeChallenge}`;
       window.location.href = authUrl;
     });
   }
 
-  function generatePlaylistWithToken(token, auto = false) {
-    appendMessage("bot", auto ? "Creating your custom playlist now 🎧..." : "Working on your playlist...");
+  // Playlist generation (only after callback)
+  const storedToken = localStorage.getItem("spotify_token");
+  const storedGenres = localStorage.getItem("selected_genres");
+  if (storedToken && storedGenres && window.location.hash === "#playlist") {
+    chatbot.classList.remove("hidden");
+    chatbotCloud.style.display = "none";
 
+    appendMessage("bot", "Welcome back Oishi! 💖 Let's recreate your playlist from earlier! 🎧");
+    appendMessage("bot", "Creating your custom playlist now 🎧...");
+
+    generatePlaylistWithToken(storedToken, storedGenres.split(","));
+    localStorage.removeItem("spotify_token");
+    localStorage.removeItem("selected_genres");
+  }
+
+  function generatePlaylistWithToken(token, genres) {
     fetch("https://melody-backend-7vmo.onrender.com/api/playlist", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        token: token,
-        genres: userData.genres
-      })
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ token, genres })
     })
     .then(res => res.json())
     .then(data => {
@@ -122,12 +125,10 @@ document.addEventListener("DOMContentLoaded", function () {
         appendSpotifyButton(data.playlist_url);
       } else {
         appendMessage("bot", "Oops! Couldn't generate your playlist.");
-        clearBrokenSession();
       }
     })
     .catch(() => {
       appendMessage("bot", "Server error while generating playlist.");
-      clearBrokenSession();
     });
   }
 
@@ -161,14 +162,5 @@ document.addEventListener("DOMContentLoaded", function () {
     const digest = await crypto.subtle.digest("SHA-256", data);
     return btoa(String.fromCharCode(...new Uint8Array(digest)))
       .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
-  }
-
-  function clearBrokenSession() {
-    localStorage.removeItem("spotify_token");
-    localStorage.removeItem("selected_genres");
-    localStorage.removeItem("code_verifier");
-    appendMessage("bot", "Let’s try again. Please provide your favorite genres.");
-    askGenre();
-    step = 1;
   }
 });
