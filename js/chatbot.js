@@ -81,14 +81,14 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function redirectToSpotifyAuth(genres) {
-    const clientId = "9d4c5c3068574999b5ce2dea3bf5db54"; // Your Spotify client ID
+    const clientId = "9d4c5c3068574999b5ce2dea3bf5db54";
     const redirectUri = "https://developerprajjal.github.io/birthday-for-oishi/callback.html";
     const scope = "playlist-modify-public playlist-modify-private";
     const state = encodeURIComponent(genres.join(","));
 
     const codeVerifier = generateCodeVerifier();
-    localStorage.setItem("code_verifier", codeVerifier); // ✅ USE localStorage
-
+    localStorage.setItem("code_verifier", codeVerifier);
+    localStorage.setItem("selected_genres", genres.join(","));
 
     generateCodeChallenge(codeVerifier).then(codeChallenge => {
       const authUrl = `https://accounts.spotify.com/authorize?response_type=code&client_id=${clientId}&scope=${scope}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${state}&code_challenge_method=S256&code_challenge=${codeChallenge}`;
@@ -96,7 +96,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Playlist generation (only after callback)
+  // Playlist generation after redirect
   const storedToken = localStorage.getItem("spotify_token");
   const storedGenres = localStorage.getItem("selected_genres");
   if (storedToken && storedGenres && window.location.hash === "#playlist") {
@@ -117,7 +117,7 @@ document.addEventListener("DOMContentLoaded", function () {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ token, genres })
+      body: JSON.stringify({ access_token: token, genres }) // ✅ Correct key
     })
     .then(res => res.json())
     .then(data => {
@@ -125,10 +125,12 @@ document.addEventListener("DOMContentLoaded", function () {
         appendMessage("bot", "Here’s your custom Spotify playlist! 🎉");
         appendSpotifyButton(data.playlist_url);
       } else {
+        console.error("Playlist creation failed:", data); // ✅ For debug
         appendMessage("bot", "Oops! Couldn't generate your playlist.");
       }
     })
-    .catch(() => {
+    .catch(err => {
+      console.error("Server error:", err);
       appendMessage("bot", "Server error while generating playlist.");
     });
   }
