@@ -87,7 +87,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const state = encodeURIComponent(genres.join(","));
 
     const codeVerifier = generateCodeVerifier();
-    localStorage.setItem("code_verifier", codeVerifier);
+    localStorage.setItem("code_verifier", codeVerifier); // ✅ USE localStorage
+
 
     generateCodeChallenge(codeVerifier).then(codeChallenge => {
       const authUrl = `https://accounts.spotify.com/authorize?response_type=code&client_id=${clientId}&scope=${scope}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${state}&code_challenge_method=S256&code_challenge=${codeChallenge}`;
