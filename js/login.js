@@ -1,4 +1,7 @@
 // login.js
+
+const backendURL = "https://melody-backend-7vmo.onrender.com";
+
 function generateRandomString(length) {
   let text = '';
   const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -20,7 +23,7 @@ async function generateCodeChallenge(codeVerifier) {
 
 async function redirectToSpotifyLogin() {
   const clientId = "9d4c5c3068574999b5ce2dea3bf5db54";
-  const redirectUri = "https://developerprajjal.github.io/birthday-for-oishi/callback.html";
+  const redirectUri = "https://developerprajjal.github.io/birthday-for-oishi";
   const scope = "user-top-read";
 
   const codeVerifier = generateRandomString(128);
@@ -41,3 +44,44 @@ async function redirectToSpotifyLogin() {
 
   window.location = `https://accounts.spotify.com/authorize?${args.toString()}`;
 }
+
+// --- NEW: Check if we were redirected from Spotify with ?code
+window.addEventListener("DOMContentLoaded", async () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const code = urlParams.get("code");
+
+  if (code) {
+    const codeVerifier = localStorage.getItem("code_verifier");
+
+    if (!codeVerifier) {
+      console.error("Missing code_verifier in localStorage");
+      return;
+    }
+
+    try {
+      const res = await fetch(`${backendURL}/callback`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          code: code,
+          code_verifier: codeVerifier,
+          redirect_uri: "https://developerprajjal.github.io/birthday-for-oishi",
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        console.log("✅ Your Top Spotify Tracks:");
+        console.log(data.playlists); // Array of track info
+        // You can inject into chatbot or UI here
+      } else {
+        console.error("Error from backend:", data.error || data);
+      }
+    } catch (err) {
+      console.error("Network or backend error:", err);
+    }
+  }
+});
