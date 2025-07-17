@@ -1476,3 +1476,129 @@ body div.emoji-trail {
 .playlist-link:hover {
   background: #ff4e6c;
 }
+
+/* Chatbot Styles */
+#chatbotLauncher {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  cursor: pointer;
+  z-index: 1000;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+#chatbotLauncher img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+#chatbotCloud {
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  background: #ffd7f1;
+  color: #7e136f;
+  font-family: 'Dancing Script', cursive;
+  padding: 10px 15px;
+  border-radius: 15px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  z-index: 999;
+  animation: floatIn 1s ease forwards;
+}
+
+@keyframes floatIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#melodyChatbot {
+  position: fixed;
+  bottom: 100px;
+  right: 20px;
+  width: 320px;
+  max-height: 500px;
+  background: #fff0fa;
+  border: 2px solid #ffb4e6;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 1001;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+.chatbot-header {
+  background-color: #ff9edb;
+  padding: 10px;
+  color: white;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chatbot-body {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.bot-message, .user-message {
+  margin: 5px 0;
+  padding: 8px 12px;
+  border-radius: 12px;
+  max-width: 85%;
+}
+
+.bot-message {
+  background-color: #ffd8ef;
+  align-self: flex-start;
+}
+
+.user-message {
+  background-color: #d7ffe9;
+  align-self: flex-end;
+}
+
+.chatbot-input {
+  display: flex;
+  padding: 8px;
+  border-top: 1px solid #eee;
+  background: #fff8fd;
+}
+
+.chatbot-input input {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.chatbot-input button {
+  margin-left: 8px;
+  padding: 6px 12px;
+  background-color: #f368d6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.chatbot-input button:hover {
+  background-color: #df54c1;
+}
+
