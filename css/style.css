@@ -1604,26 +1604,39 @@ body div.emoji-trail {
 }
 
 .audio-wrapper {
-  margin-top: 12px;
-  text-align: center;
-  background: #fff0fa;
-  border: 2px solid #ffb4e6;
+  margin: 10px auto;
+  padding: 8px;
+  background-color: #ffe6f6;
   border-radius: 15px;
-  padding: 10px 15px;
-  box-shadow: 0 4px 12px rgba(255, 105, 180, 0.2);
-  display: inline-block;
-  animation: fadeInUp 0.6s ease-out;
+  width: 90%;
+  max-width: 250px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
 
 .audio-wrapper audio {
   width: 100%;
-  max-width: 240px;
+  height: 32px;
+  border-radius: 10px;
+  background-color: #fff;
   outline: none;
-  border: none;
-  border-radius: 8px;
-  background-color: transparent;
-  box-shadow: none;
 }
+
+.audio-wrapper audio::-webkit-media-controls-panel {
+  background-color: #fff0f8;
+  border-radius: 10px;
+}
+
+.audio-wrapper audio::-webkit-media-controls-play-button {
+  background-color: #ffb6d5;
+  border-radius: 50%;
+}
+
+.audio-wrapper audio::-webkit-media-controls-timeline {
+  background-color: #ffcce5;
+}
+
+
 
 .constellation-section {
   margin-top: 40px;
