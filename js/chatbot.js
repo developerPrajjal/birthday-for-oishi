@@ -56,23 +56,23 @@ document.addEventListener("DOMContentLoaded", () => {
     const moodData = {
       Happy: {
         message: "Yay! Here's something to keep the joy flowing! 🌈",
-        file: "assets/audio/happy.mp3",
+        file: "assets/Ekhon Anek Raat-Anupam Roy.mp3",
       },
       Sad: {
         message: "Sending warm hugs... 💗 This melody might help.",
-        file: "assets/audio/sad.mp3",
+        file: "assets/Nei Tumi Aager Moto.mp3",
       },
       Chill: {
         message: "Here’s your chill zone. 🎧 Just vibe...",
-        file: "assets/audio/chill.mp3",
+        file: "assets/Journey Song.mp3",
       },
       Calm: {
         message: "Take a deep breath... Here’s something soothing. 🌿",
-        file: "assets/audio/calm.mp3",
+        file: "assets/Bondhu-Chol.mp3",
       },
       Romantic: {
         message: "For your soft little heart 💘 Enjoy this tune:",
-        file: "assets/audio/romantic.mp3",
+        file: "assets/Bhalobeshey Basho Naa.mp3",
       },
     };
 
