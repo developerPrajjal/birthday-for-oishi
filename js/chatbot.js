@@ -1,27 +1,26 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const chatbotButton = document.getElementById("chatbot-button");
-  const chatbotContainer = document.getElementById("chatbot-container");
-  const closeChatbotBtn = document.getElementById("close-chatbot");
-  const chatWindow = document.getElementById("chat-window");
-  const userInput = document.getElementById("user-input");
-  const sendButton = document.getElementById("send-button");
+  const chatbotButton = document.getElementById("chatbotLauncher");
+  const chatbotContainer = document.getElementById("melodyChatbot");
+  const closeChatbotBtn = document.getElementById("closeChatbot");
+  const chatWindow = document.getElementById("chatbotBody");
+  const userInput = document.getElementById("userInput");
+  const sendButton = document.getElementById("sendMsg");
 
   // Toggle chatbot
   chatbotButton.addEventListener("click", () => {
-    chatbotContainer.style.display = "flex";
-    setTimeout(() => chatbotContainer.classList.add("open"), 100);
+    chatbotContainer.classList.remove("hidden");
+    document.getElementById("chatbotCloud").style.display = "none";
   });
 
   closeChatbotBtn.addEventListener("click", () => {
-    chatbotContainer.classList.remove("open");
-    setTimeout(() => chatbotContainer.style.display = "none", 300);
+    chatbotContainer.classList.add("hidden");
   });
 
   // Add message to chat
   function addMessage(sender, text, isHTML = false) {
     const message = document.createElement("div");
-    message.className = `message ${sender}`;
-    message.innerHTML = isHTML ? text : `<p>${text}</p>`;
+    message.className = sender === "user" ? "user-message" : "bot-message";
+    message.innerHTML = isHTML ? text : text;
     chatWindow.appendChild(message);
     chatWindow.scrollTop = chatWindow.scrollHeight;
   }
@@ -93,7 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
-  // Fallback for manual text entry
+  // Text Fallback
   sendButton.addEventListener("click", () => {
     const text = userInput.value.trim();
     if (text) {
@@ -103,5 +102,5 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  greetUser(); // Start conversation
+  greetUser();
 });
