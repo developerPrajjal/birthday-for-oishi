@@ -1603,3 +1603,15 @@ body div.emoji-trail {
   background-color: #df54c1;
 }
 
+.audio-wrapper {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.audio-wrapper audio {
+  width: 90%;
+  max-width: 250px;
+  outline: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
