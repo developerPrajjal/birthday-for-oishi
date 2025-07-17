@@ -5,6 +5,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const chatWindow = document.getElementById("chatbotBody");
   const userInput = document.getElementById("userInput");
   const sendButton = document.getElementById("sendMsg");
+  const bgMusic = document.getElementById("bgMusic"); // 🎵 Background music reference
+
+  let currentChatAudio = null; // 🔊 Track chatbot audio
 
   // Toggle chatbot
   chatbotButton.addEventListener("click", () => {
@@ -14,6 +17,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   closeChatbotBtn.addEventListener("click", () => {
     chatbotContainer.classList.add("hidden");
+
+    // ▶️ Resume background music when chatbot closes
+    if (bgMusic && bgMusic.paused) {
+      bgMusic.play();
+    }
+
+    // ⏹️ Also stop chatbot audio if open
+    if (currentChatAudio && !currentChatAudio.paused) {
+      currentChatAudio.pause();
+      currentChatAudio.currentTime = 0;
+    }
   });
 
   // Add message to chat
@@ -76,23 +90,45 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const selected = moodData[mood];
-
     addMessage("bot", selected.message);
-    addMessage(
-      "bot",
-      `
+
+    // Create audio player dynamically
+    const audioHTML = `
       <div class="audio-wrapper">
-        <audio controls>
+        <audio controls id="chatAudio">
           <source src="${selected.file}" type="audio/mpeg">
           Your browser does not support the audio tag.
         </audio>
       </div>
-      `,
-      true
-    );
+    `;
+
+    addMessage("bot", audioHTML, true);
+
+    setTimeout(() => {
+      const audioElement = document.getElementById("chatAudio");
+
+      if (audioElement) {
+        // 🔇 Pause background music when chatbot audio plays
+        audioElement.addEventListener("play", () => {
+          if (bgMusic && !bgMusic.paused) {
+            bgMusic.pause();
+          }
+
+          // Save reference to currently playing chat audio
+          currentChatAudio = audioElement;
+        });
+
+        // 🔁 Resume BGM when chatbot audio ends
+        audioElement.addEventListener("ended", () => {
+          if (bgMusic && bgMusic.paused) {
+            bgMusic.play();
+          }
+        });
+      }
+    }, 100); // Delay to ensure element is added
   }
 
-  // Text Fallback
+  // Fallback text input
   sendButton.addEventListener("click", () => {
     const text = userInput.value.trim();
     if (text) {
