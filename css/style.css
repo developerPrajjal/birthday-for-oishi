@@ -1500,16 +1500,18 @@ body div.emoji-trail {
 #chatbotCloud {
   position: fixed;
   bottom: 90px;
-  right: 20px;
-  background: #ffd7f1;
-  color: #7e136f;
-  font-family: 'Dancing Script', cursive;
+  left: 90px; /* ✅ Positioned left now */
+  background-color: #fff;
+  color: #ff69b4;
+  border-radius: 20px;
   padding: 10px 15px;
-  border-radius: 15px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  font-size: 14px;
+  font-weight: bold;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   z-index: 999;
-  animation: floatIn 1s ease forwards;
+  animation: floatUp 2s ease-out forwards;
 }
+
 
 @keyframes floatIn {
   from {
