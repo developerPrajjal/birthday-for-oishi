@@ -83,76 +83,68 @@
         </div>
       </div>
 
-      <!-- 🎶 Spotify Playlist Button -->
-      <div class="spotify-section">
-        <button onclick="redirectToSpotifyLogin()" class="spotify-btn">
-          🎶 Get Your Spotify Playlist
-        </button>
+      <!-- 🎮 Game Launch Button -->
+      <div id="gameLauncher">🎮</div>
+    </div>
+
+    <!-- Duck Game Modal -->
+    <div id="duckGameModal" class="hidden">
+      <div class="game-box">
+        <h2>🐥 Catch the Ducklings!</h2>
+        <p>Click/tap on the ducklings as they appear!</p>
+        <div id="gameArea"></div>
+        <p>Score: <span id="scoreCounter">0</span></p>
+        <button id="startGameBtn">Start</button>
+        <button id="closeGameBtn">Close</button>
       </div>
     </div>
 
-    <!-- 🎮 Game Launch Button -->
-    <div id="gameLauncher">🎮</div>
-  </div>
-
-  <!-- Duck Game Modal -->
-  <div id="duckGameModal" class="hidden">
-    <div class="game-box">
-      <h2>🐥 Catch the Ducklings!</h2>
-      <p>Click/tap on the ducklings as they appear!</p>
-      <div id="gameArea"></div>
-      <p>Score: <span id="scoreCounter">0</span></p>
-      <button id="startGameBtn">Start</button>
-      <button id="closeGameBtn">Close</button>
+    <div id="gameSuccess" class="hidden">
+      <div class="success-box">
+        <div class="tenor-gif-embed" data-postid="25065443" data-share-method="host" data-aspect-ratio="1.23552" data-width="100%">
+          <a href="https://tenor.com/view/duck-gif-25065443">Duck Sticker</a> from 
+          <a href="https://tenor.com/search/duck-stickers">Duck Stickers</a>
+        </div> 
+        <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
+        <h2>🎉 You're a Duckling Queen! 🎉</h2>
+        <p>You spread birthday joy like no one else. 💖🐥</p>
+      </div>
     </div>
-  </div>
 
-  <div id="gameSuccess" class="hidden">
-    <div class="success-box">
-      <div class="tenor-gif-embed" data-postid="25065443" data-share-method="host" data-aspect-ratio="1.23552" data-width="100%">
-        <a href="https://tenor.com/view/duck-gif-25065443">Duck Sticker</a> from 
-        <a href="https://tenor.com/search/duck-stickers">Duck Stickers</a>
-      </div> 
-      <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
-      <h2>🎉 You're a Duckling Queen! 🎉</h2>
-      <p>You spread birthday joy like no one else. 💖🐥</p>
+    <!-- Background Music -->
+    <audio id="bgMusic" preload="auto" loop>
+      <source src="assets/birthday.mp3" type="audio/mpeg" />
+    </audio>
+
+    <!-- Floating Cake Emojis -->
+    <div class="cake-container" id="cakeContainer"></div>
+
+    <!-- Chatbot -->
+    <div id="chatbotLauncher">
+      <img src="assets/bot.jpg" alt="MelodyBot" />
     </div>
-  </div>
 
-  <!-- Background Music -->
-  <audio id="bgMusic" preload="auto" loop>
-    <source src="assets/birthday.mp3" type="audio/mpeg" />
-  </audio>
-
-  <!-- Floating Cake Emojis -->
-  <div class="cake-container" id="cakeContainer"></div>
-
-  <!-- Chatbot -->
-  <div id="chatbotLauncher">
-    <img src="assets/bot.jpg" alt="MelodyBot" />
-  </div>
-
-  <div id="chatbotCloud" class="chatbot-cloud">
-    Hey, I’m MelodyAI. Click to reveal surprise!
-  </div>
-
-  <div id="melodyChatbot" class="hidden">
-    <div class="chatbot-header">
-      <span>🎀 MelodyAI</span>
-      <button id="closeChatbot">✖</button>
+    <div id="chatbotCloud" class="chatbot-cloud">
+      Hey, I’m MelodyAI. Click to reveal surprise!
     </div>
-    <div class="chatbot-body" id="chatbotBody">
-      <div class="bot-message">Hello Oishi, hope you are having a great day! 😀</div>
-    </div>
-    <div class="chatbot-input">
-      <input type="text" id="userInput" placeholder="Type your message..." />
-      <button id="sendMsg">Send</button>
-    </div>
-  </div>
 
-  <!-- Scripts (loaded at end of body for proper execution) -->
-  <script src="js/script.js" defer></script>
-  <script src="js/chatbot.js" defer></script>
-  <script src="js/login.js" defer></script>
+    <div id="melodyChatbot" class="hidden">
+      <div class="chatbot-header">
+        <span>🎀 MelodyAI</span>
+        <button id="closeChatbot">✖</button>
+      </div>
+      <div class="chatbot-body" id="chatbotBody">
+        <div class="bot-message">Hello Oishi, hope you are having a great day! 😀</div>
+      </div>
+      <div class="chatbot-input">
+        <input type="text" id="userInput" placeholder="Tell me your mood..." />
+        <button id="sendMsg">Send</button>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/script.js" defer></script>
+    <script src="js/chatbot.js" defer></script>
+  </div>
 </body>
 </html>
