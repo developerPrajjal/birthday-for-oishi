@@ -1,26 +1,26 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const chatbotButton = document.getElementById("chatbotLauncher");
-  const chatbotContainer = document.getElementById("melodyChatbot");
-  const closeChatbotBtn = document.getElementById("closeChatbot");
-  const chatWindow = document.getElementById("chatbotBody");
-  const userInput = document.getElementById("userInput");
-  const sendButton = document.getElementById("sendMsg");
+  const chatbotButton = document.getElementById("chatbot-button");
+  const chatbotContainer = document.getElementById("chatbot-container");
+  const closeChatbotBtn = document.getElementById("close-chatbot");
+  const chatWindow = document.getElementById("chat-window");
+  const userInput = document.getElementById("user-input");
+  const sendButton = document.getElementById("send-button");
 
   // Toggle chatbot
   chatbotButton.addEventListener("click", () => {
-    chatbotContainer.classList.remove("hidden");
+    chatbotContainer.style.display = "flex";
     setTimeout(() => chatbotContainer.classList.add("open"), 100);
   });
 
   closeChatbotBtn.addEventListener("click", () => {
     chatbotContainer.classList.remove("open");
-    setTimeout(() => chatbotContainer.classList.add("hidden"), 300);
+    setTimeout(() => chatbotContainer.style.display = "none", 300);
   });
 
   // Add message to chat
   function addMessage(sender, text, isHTML = false) {
     const message = document.createElement("div");
-    message.className = `${sender}-message`;
+    message.className = `message ${sender}`;
     message.innerHTML = isHTML ? text : `<p>${text}</p>`;
     chatWindow.appendChild(message);
     chatWindow.scrollTop = chatWindow.scrollHeight;
@@ -53,36 +53,47 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Mood handler
   function handleMoodSelection(mood) {
-    const playlistLinks = {
+    const moodData = {
       Happy: {
         message: "Yay! Here's something to keep the joy flowing! 🌈",
-        link: "https://www.youtube.com/watch?v=ZbZSe6N_BXs&list=PLMC9KNkIncKtPzgY-5rmhvj7fax8fdxoj",
+        file: "assets/audio/happy.mp3",
       },
       Sad: {
-        message: "Sending warm hugs... 💗 This playlist might help.",
-        link: "https://www.youtube.com/watch?v=hoPugqYMISM&list=PLzAUj-EoS1r4Hlm6EUWzPZvx1WxYAsA0b",
+        message: "Sending warm hugs... 💗 This melody might help.",
+        file: "assets/audio/sad.mp3",
       },
       Chill: {
-        message: "Here’s your chill zone playlist. 🎧 Just vibe...",
-        link: "https://www.youtube.com/watch?v=5qap5aO4i9A",
+        message: "Here’s your chill zone. 🎧 Just vibe...",
+        file: "assets/audio/chill.mp3",
       },
       Calm: {
         message: "Take a deep breath... Here’s something soothing. 🌿",
-        link: "https://www.youtube.com/watch?v=y3n2PB9p7fI",
+        file: "assets/audio/calm.mp3",
       },
       Romantic: {
-        message: "For your soft little heart 💘 Enjoy these sweet melodies:",
-        link: "https://www.youtube.com/watch?v=JGwWNGJdvx8&list=PLuVWbdCEh2T9JZTy05PTFqPEoR4N04hxY",
+        message: "For your soft little heart 💘 Enjoy this tune:",
+        file: "assets/audio/romantic.mp3",
       },
     };
 
-    const moodData = playlistLinks[mood];
+    const selected = moodData[mood];
 
-    addMessage("bot", moodData.message);
-    addMessage("bot", `<a href="${moodData.link}" target="_blank" class="playlist-link">🎵 Open Playlist</a>`, true);
+    addMessage("bot", selected.message);
+    addMessage(
+      "bot",
+      `
+      <div class="audio-wrapper">
+        <audio controls>
+          <source src="${selected.file}" type="audio/mpeg">
+          Your browser does not support the audio tag.
+        </audio>
+      </div>
+      `,
+      true
+    );
   }
 
-  // Manual send
+  // Fallback for manual text entry
   sendButton.addEventListener("click", () => {
     const text = userInput.value.trim();
     if (text) {
