@@ -1440,3 +1440,39 @@ body div.emoji-trail {
   background-color: #ff6fb1;
 }
 
+.mood-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.mood-button {
+  background-color: #ffc0cb;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s;
+}
+
+.mood-button:hover {
+  background-color: #ff99bb;
+}
+
+.playlist-link {
+  display: inline-block;
+  margin-top: 5px;
+  text-decoration: none;
+  color: #fff;
+  background: #ff6b81;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+.playlist-link:hover {
+  background: #ff4e6c;
+}
