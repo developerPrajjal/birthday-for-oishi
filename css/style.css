@@ -1624,3 +1624,33 @@ body div.emoji-trail {
   background-color: transparent;
   box-shadow: none;
 }
+
+.constellation-section {
+  margin-top: 40px;
+  text-align: center;
+  background: #ffe9f7;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(255, 105, 180, 0.2);
+}
+
+.constellation-section h2 {
+  font-family: 'Dancing Script', cursive;
+  font-size: 28px;
+  color: #ff69b4;
+  margin-bottom: 15px;
+}
+
+#constellationCanvas {
+  border-radius: 12px;
+  background: #0b0b25;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.constellation-caption {
+  margin-top: 10px;
+  font-size: 16px;
+  color: #ff82b2;
+  font-style: italic;
+}
+
